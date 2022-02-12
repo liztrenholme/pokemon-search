@@ -15,6 +15,21 @@ h3 {
     margin: 0;
 }
 
+h2 {
+    margin: 0 0.5em 0 0.5em;
+}
+
+.name-container {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: start; */
+    padding: 0.5em;
+}
+
+em {
+    font-size: 12px;
+}
+
 .pokemon-front {
     width: 5em;
     height: 5em;
@@ -27,7 +42,7 @@ h3 {
     color: black;
     border: solid black 3px;
     border-radius: 15px;
-    padding: 0.5em;
+    padding: 1em;
     background-color: white;
     margin-left: 1em;
 }
@@ -93,6 +108,7 @@ ul {
     cursor: pointer;
     border: solid white 3px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    margin-top: 0.5em;
 }
 
 .normal-button {
@@ -104,6 +120,7 @@ ul {
     cursor: pointer;
     border: solid black 3px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    margin-top: 0.5em;
 }
 
 .loading {
@@ -123,10 +140,24 @@ ul {
 .results-container {
     display: flex;
     flex-direction: row;
+    justify-content: space-evenly;
 }
 
 .evolve-container {
     color: black;
     border: solid black 3px;
     border-radius: 15px;
+}
+
+.evolves-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.evolve-item {
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+    justify-content: space-evenly;
 }

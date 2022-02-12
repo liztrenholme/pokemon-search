@@ -29,20 +29,6 @@ export const getEvolutionData = async (pokemonId) => {
   }
 };
 
-export const getPokedexData = async (pokemonName) => {
-  let data = {};
-  try {
-    data = await axios.get(`https://pokeapi.co/api/v2/pokedex/${pokemonName.toLowerCase()}`);
-      
-  } catch(e) {
-    console.log('error fetching', e);
-    return 'Error ' + e; 
-  }
-  if (data && Object.keys(data)) {
-    return data.data;
-  }
-};
-
 export const getPokemonSpeciesData = async (pokemonId) => {
   let data = {};
   try {
