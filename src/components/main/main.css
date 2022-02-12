@@ -1,0 +1,132 @@
+.display {
+    border: solid black 1px;
+    border-radius: 25px;
+    background-color:rgb(231, 246, 231, 0.8);
+    padding: 1em;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+h1 {
+    color: black;
+}
+
+h3 {
+    padding: 0;
+    margin: 0;
+}
+
+.pokemon-front {
+    width: 5em;
+    height: 5em;
+}
+
+.moves-list {
+    font-size: 16px;
+    max-height: 20em;
+    overflow: scroll;
+    color: black;
+    border: solid black 3px;
+    border-radius: 15px;
+    padding: 0.5em;
+    background-color: white;
+    margin-left: 1em;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.types-list {
+    font-size: 16px;
+    border: solid black 3px;
+    border-radius: 15px;
+}
+
+.search-container {
+    display: flex;
+    flex-direction: row;
+    padding: .5em;
+    justify-content: flex-end;
+}
+
+.search-input {
+    height: 2.2em;
+    border-radius: 15px;
+    padding: 0.5em;
+    font-size: 18px;
+    width: 100%;
+}
+
+.search-button {
+    background-color: rgb(245, 228, 250);
+    color: black;
+    border-radius: 15px;
+    font-size: 16;
+    padding: 0.5em;
+    margin: 0 0.5em;
+    border: solid black 3px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+/* Make shiny button shiny and pretty */
+@keyframes TransitioningBackground {
+    0% {
+      background-position: 1% 0%;
+    }
+    50% {
+      background-position: 99% 100%;
+    }
+    100% {
+      background-position: 1% 0%;
+    }
+  }
+
+.shiny-button {
+    background-color: #b8b8b8;
+    background-image: url(https://i.pinimg.com/originals/02/d1/f2/02d1f250748028e83d8e5f3ea636f581.gif);
+    width: 8em;
+    border-radius: 15px;
+    padding: 0.5em;
+    color: white;
+    cursor: pointer;
+    border: solid white 3px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.normal-button {
+    background-color: rgb(245, 228, 250);
+    width: 8em;
+    border-radius: 15px;
+    padding: 0.5em;
+    color: black;
+    cursor: pointer;
+    border: solid black 3px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.loading {
+    animation: App-logo-spin infinite 5s linear;
+    width: 10em;
+}
+
+@keyframes App-logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+.results-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.evolve-container {
+    color: black;
+    border: solid black 3px;
+    border-radius: 15px;
+}
