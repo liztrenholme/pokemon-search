@@ -80,7 +80,7 @@ class Main extends Component {
         });
       } else if (pokemon && pokemon.includes('404')) {
         this.setState({
-          pokemon: 'This pokemon does not exist- try your search again.',
+          pokemon: 'Try your search again, because this pokemon does not exist!',
           isLoading: false,
           shinyMode: false,
           imgFront: '',

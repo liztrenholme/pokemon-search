@@ -149,7 +149,7 @@ ul {
     color: black;
     border: solid black 3px;
     border-radius: 15px;
-    max-height: 20em;
+    max-height: 25em;
     padding: 1em;
 }
 
@@ -176,4 +176,5 @@ ul {
     font-size: 2em;
     font-weight: bold;
     margin: auto;
+    white-space: nowrap;
 }
