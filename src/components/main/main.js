@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './main.css';
 import PropTypes from 'prop-types';
 import 'whatwg-fetch';
-import { getPokemonData, getPokemonSpeciesData } from '../../modules';
+import { getPokemonData, getPokemonSpeciesData, getRandomPokemon } from '../../modules';
 import Pokeball from '../images/Pokeball.png';
 import axios from 'axios';
 
@@ -80,7 +80,7 @@ class Main extends Component {
           searchInput: pokemon.name,
           deName
         });
-      } else if (pokemon && pokemon.includes('404')) {
+      } else if (pokemon && !Object.keys(pokemon) && pokemon.includes('404')) {
         this.setState({
           pokemon: 'This pokemon does not exist- try your search again.',
           isLoading: false,
@@ -95,6 +95,12 @@ class Main extends Component {
           evolutionChain: []
         });
       }
+    }
+
+    handleRandomPokemon = async () => {
+      let randomPokemonData = await getRandomPokemon();
+      this.setState({ isLoading: true });
+      this.handleSearchCall(randomPokemonData.name);
     }
 
     render() {
@@ -121,6 +127,7 @@ class Main extends Component {
           <div className='search-container'>
             <input className='search-input' onChange={this.handleUpdateInput} value={searchInput} />
             <div className='search-button' onClick={this.handleSearchCall}>Search!</div>
+            <div className='search-button' onClick={this.handleRandomPokemon}>Random!</div>
           </div>
           {isLoading ? (
             <div>
@@ -173,7 +180,12 @@ class Main extends Component {
           {!isLoading && evolutionChain && evolutionChain.length ? (<div className='evolve-container'>
             <h3>Evolution Chain:</h3>
             <div className='evolves-list'>
-              {evolutionChain.map((form, i) => <div onClick={() => this.handleSearchCall(form.name)} className='evolve-item' key={form.name}><img height='100%' src={form.imageUrl} alt={form.name} />{i === evolutionChain.length - 1 ? form.name : form.name + ' -> '}</div>)}
+              {evolutionChain.map((form, i) => <div onClick={() => this.handleSearchCall(form.name)} 
+                className='evolve-item' 
+                key={form.name}>
+                <img height='100%' src={form.imageUrl} alt={form.name} />
+                {i === evolutionChain.length - 1 ? form.name : form.name + ' -> '}
+              </div>)}
             </div>
           </div>) : null}
         </div>
