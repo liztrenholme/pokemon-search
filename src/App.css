@@ -2,6 +2,7 @@
   text-align: center;
   background-image: url('./components/images/pokeballs.jpg');
   background-size: contain;
+  background-attachment: fixed;
 }
 
 .App-logo {

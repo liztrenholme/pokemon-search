@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Component } from 'react';
 import './main.css';
 import PropTypes from 'prop-types';
@@ -18,7 +19,8 @@ class Main extends Component {
       searchInput: '',
       moves: [],
       types: [],
-      evolutionChain: []
+      evolutionChain: [],
+      deName: ''
     }
     // async componentDidMount() {
     //     const eevee = await getPokemonData('eevee')
@@ -33,10 +35,11 @@ class Main extends Component {
 
     toggleShinyMode = () => this.state.shinyMode ? this.setState({shinyMode: false}) : this.setState({shinyMode: true})
 
-    handleSearchCall = async () => {
+    handleSearchCall = async (newPokemon) => {
       this.setState({ isLoading: true });
-      const pokemon = await getPokemonData(this.state.searchInput);
+      const pokemon = await getPokemonData(typeof newPokemon === 'string' ? newPokemon : this.state.searchInput);
       const evolves = [];
+      let deName = '';
       if (pokemon && pokemon.name) {
         const pokemonId = pokemon.id;
         const speciesData = await getPokemonSpeciesData(pokemonId);
@@ -46,19 +49,21 @@ class Main extends Component {
           const evol1 = evolution.data.chain.evolves_to[0]?.species.name;
           const evol2 = evolution.data.chain.evolves_to[0]?.evolves_to[0]?.species.name;
           const evol3 = evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.name;
-          //   console.log('evolution data', evolution.data.chain.evolves_to[0].species.name, evolution.data.chain.evolves_to[0].evolves_to[0].species.name);
+          
+          // https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/189.png
           if (isBaby) {
-            evolves.push(isBaby);
+            evolves.push({name: isBaby, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.species.url.split('/')[evolution.data.chain.species.url.split('/').length - 2]}.png`});
           }
           if (evol1) {
-            evolves.push(evol1);
+            evolves.push({name: evol1, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.evolves_to[0]?.species.url.split('/')[evolution.data.chain.evolves_to[0]?.species.url.split('/').length - 2]}.png`});
           }
           if (evol2) {
-            evolves.push(evol2);
+            evolves.push({name: evol2, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.evolves_to[0]?.evolves_to[0]?.species.url.split('/')[evolution.data.chain.evolves_to[0]?.evolves_to[0]?.species.url.split('/').length - 2]}.png`});
           }
           if (evol3) {
-            evolves.push(evol3);
+            evolves.push({name: evol3, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/')[evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/').length - 2]}.png`});
           }
+          deName = speciesData.names.find(i => i.language.name === 'de').name;
         }
         const moves = pokemon.moves.map(i => i.move.name);
         const types = pokemon.types.map(i => i.type.name);
@@ -71,7 +76,9 @@ class Main extends Component {
           imgBackShiny: pokemon.sprites.back_shiny,
           moves,
           types,
-          evolutionChain: evolves
+          evolutionChain: evolves,
+          searchInput: pokemon.name,
+          deName
         });
       } else if (pokemon && pokemon.includes('404')) {
         this.setState({
@@ -102,7 +109,8 @@ class Main extends Component {
         isLoading,
         types,
         searchInput,
-        evolutionChain
+        evolutionChain,
+        deName
       } = this.state;
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
       return (
@@ -120,13 +128,16 @@ class Main extends Component {
               <img className='loading' src={Pokeball} alt='loading'/>
             </div>) :
             (<div className='results-container'>
-              <div style={{
+              {pokemon ? (<div style={{
                 backgroundColor: 'azure',
                 border: '5px solid #fff',
                 borderRadius: '15px'
               }}>
                 <div style={{ color: 'black' }}>
-                  <h2>{pokemonName}</h2>
+                  <div className='name-container'>
+                    <h2>{pokemonName}</h2>
+                    {deName ? <em>{deName}</em> : null}
+                  </div>
                   {types.length ? <span><ul className='types-list'>
                     <h3>Type(s):</h3> {types.map(type => <li key={type}>{type}</li>)}
                   </ul></span> : null}
@@ -152,7 +163,7 @@ class Main extends Component {
                     <img className='pokemon-front' src={imgBack} alt={pokemon} />
                     : null}
                 </div>)}
-              </div>
+              </div>) : null}
               {moves && moves.length ? <div className='moves-list'>
                 <ul>
                   <h3>{moves.length} Moves:</h3> {moves.map(move => <li key={move}>{move}</li>)}
@@ -161,8 +172,8 @@ class Main extends Component {
             </div>)}
           {!isLoading && evolutionChain && evolutionChain.length ? (<div className='evolve-container'>
             <h3>Evolution Chain:</h3>
-            <div className='evolves-container'>
-              {evolutionChain.map((form, i) => <div key={Math.random()}>{i === evolutionChain.length - 1 ? form : form + ' -> '}</div>)}
+            <div className='evolves-list'>
+              {evolutionChain.map((form, i) => <div onClick={() => this.handleSearchCall(form.name)} className='evolve-item' key={form.name}><img height='100%' src={form.imageUrl} alt={form.name} />{i === evolutionChain.length - 1 ? form.name : form.name + ' -> '}</div>)}
             </div>
           </div>) : null}
         </div>
