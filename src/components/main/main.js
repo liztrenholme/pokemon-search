@@ -37,7 +37,6 @@ class Main extends Component {
       this.setState({ isLoading: true });
       const pokemon = await getPokemonData(this.state.searchInput);
       const evolves = [];
-      console.log('pokemon fetched!', pokemon);
       if (pokemon && pokemon.name) {
         const pokemonId = pokemon.id;
         const speciesData = await getPokemonSpeciesData(pokemonId);
@@ -48,7 +47,6 @@ class Main extends Component {
           const evol2 = evolution.data.chain.evolves_to[0]?.evolves_to[0]?.species.name;
           const evol3 = evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.name;
           //   console.log('evolution data', evolution.data.chain.evolves_to[0].species.name, evolution.data.chain.evolves_to[0].evolves_to[0].species.name);
-          console.log('?????', evol1, evol2, evol3);
           if (isBaby) {
             evolves.push(isBaby);
           }
