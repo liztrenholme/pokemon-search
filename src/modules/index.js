@@ -42,3 +42,19 @@ export const getPokemonSpeciesData = async (pokemonId) => {
     return data.data;
   }
 };
+
+export const getRandomPokemon = async () => {
+  let data = {};
+  const randNum = Math.floor(Math.random() * 1118);
+  console.log('rand is', randNum);
+  try {
+    data = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${randNum}`);
+        
+  } catch(e) {
+    console.log('error fetching', e);
+    return 'Error ' + e; 
+  }
+  if (data && Object.keys(data)) {
+    return data.data;
+  }
+};
