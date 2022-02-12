@@ -84,6 +84,7 @@ ul {
     margin: 0 0.5em;
     border: solid black 3px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    cursor: pointer;
 }
 
 /* Make shiny button shiny and pretty */
@@ -148,17 +149,31 @@ ul {
     color: black;
     border: solid black 3px;
     border-radius: 15px;
+    max-height: 20em;
+    padding: 1em;
 }
 
 .evolves-list {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    font-size: 16px;
 }
 
 .evolve-item {
     display: flex;
     flex-direction: column;
     margin-top: auto;
-    justify-content: space-evenly;
+    justify-content: space-around;
+    font-size: 16px;
+}
+
+.evolImg {
+    margin-bottom: -0.75em;
+}
+
+.arrow {
+    font-size: 2em;
+    font-weight: bold;
+    margin: auto;
 }

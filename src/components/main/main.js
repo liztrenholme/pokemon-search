@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { Component } from 'react';
 import './main.css';
 import PropTypes from 'prop-types';
@@ -23,10 +22,8 @@ class Main extends Component {
       deName: ''
     }
     // async componentDidMount() {
-    //     const eevee = await getPokemonData('eevee')
-
-    //     console.log(eevee)
-    //     this.setState({pokemon: eevee.name, imgFront: eevee.sprites.front_default})
+    //   const eevee = await this.handleSearchCall('eevee');
+    //   console.log(eevee);
     // }
 
     handleUpdateInput = (e) => {
@@ -38,7 +35,7 @@ class Main extends Component {
     handleSearchCall = async (newPokemon) => {
       this.setState({ isLoading: true });
       const pokemon = await getPokemonData(typeof newPokemon === 'string' ? newPokemon : this.state.searchInput);
-      const evolves = [];
+      let evolves = [];
       let deName = '';
       if (pokemon && pokemon.name) {
         const pokemonId = pokemon.id;
@@ -46,23 +43,24 @@ class Main extends Component {
         const evolution = await axios.get(speciesData.evolution_chain.url);
         if (evolution && evolution.data) {
           const isBaby = evolution.data.chain.species.name;
-          const evol1 = evolution.data.chain.evolves_to[0]?.species.name;
-          const evol2 = evolution.data.chain.evolves_to[0]?.evolves_to[0]?.species.name;
           const evol3 = evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.name;
-          
-          // https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/189.png
+
+          const manyEvols = [];
+          // level 2
+          evolution.data.chain.evolves_to.forEach(i => manyEvols.push({level: 2, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
+          // level 3
+          evolution.data.chain.evolves_to[0]?.evolves_to.forEach(i => manyEvols.push({level: 3, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
+          // level 1
           if (isBaby) {
-            evolves.push({name: isBaby, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.species.url.split('/')[evolution.data.chain.species.url.split('/').length - 2]}.png`});
+            evolves.push({level: 1, name: isBaby, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.species.url.split('/')[evolution.data.chain.species.url.split('/').length - 2]}.png`});
           }
-          if (evol1) {
-            evolves.push({name: evol1, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.evolves_to[0]?.species.url.split('/')[evolution.data.chain.evolves_to[0]?.species.url.split('/').length - 2]}.png`});
-          }
-          if (evol2) {
-            evolves.push({name: evol2, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.evolves_to[0]?.evolves_to[0]?.species.url.split('/')[evolution.data.chain.evolves_to[0]?.evolves_to[0]?.species.url.split('/').length - 2]}.png`});
-          }
+          // put them all together
+          evolves = [...evolves, ...manyEvols];
+          // level 4 (probably will never be used)
           if (evol3) {
-            evolves.push({name: evol3, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/')[evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/').length - 2]}.png`});
+            evolves.push({level: 4, name: evol3, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/')[evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/').length - 2]}.png`});
           }
+          // German name
           deName = speciesData.names.find(i => i.language.name === 'de').name;
         }
         const moves = pokemon.moves.map(i => i.move.name);
@@ -80,7 +78,7 @@ class Main extends Component {
           searchInput: pokemon.name,
           deName
         });
-      } else if (pokemon && !Object.keys(pokemon) && pokemon.includes('404')) {
+      } else if (pokemon && pokemon.includes('404')) {
         this.setState({
           pokemon: 'This pokemon does not exist- try your search again.',
           isLoading: false,
@@ -99,8 +97,13 @@ class Main extends Component {
 
     handleRandomPokemon = async () => {
       let randomPokemonData = await getRandomPokemon();
+      if (randomPokemonData && typeof randomPokemonData === 'string' && randomPokemonData.includes('Error')) {
+        this.handleRandomPokemon();
+      }
       this.setState({ isLoading: true });
-      this.handleSearchCall(randomPokemonData.name);
+      if (randomPokemonData && randomPokemonData.name) {
+        this.handleSearchCall(randomPokemonData.name);
+      }
     }
 
     render() {
@@ -131,7 +134,6 @@ class Main extends Component {
           </div>
           {isLoading ? (
             <div>
-              <p>Loading...</p>
               <img className='loading' src={Pokeball} alt='loading'/>
             </div>) :
             (<div className='results-container'>
@@ -177,17 +179,77 @@ class Main extends Component {
                 </ul>
               </div> : null}
             </div>)}
-          {!isLoading && evolutionChain && evolutionChain.length ? (<div className='evolve-container'>
-            <h3>Evolution Chain:</h3>
-            <div className='evolves-list'>
-              {evolutionChain.map((form, i) => <div onClick={() => this.handleSearchCall(form.name)} 
-                className='evolve-item' 
-                key={form.name}>
-                <img height='100%' src={form.imageUrl} alt={form.name} />
-                {i === evolutionChain.length - 1 ? form.name : form.name + ' -> '}
-              </div>)}
-            </div>
-          </div>) : null}
+          {!isLoading && evolutionChain && evolutionChain.length ? (
+            <div className='evolve-container'>
+              <h3>Evolution Chain:</h3>
+              <div className='evolves-list'>
+                <div className='level-one'
+                  style={{
+                    display: 'flex',
+                    maxWidth: '20em',
+                    justifyContent: 'center',
+                    flexWrap: 'wrap'
+                  }}>
+                  {evolutionChain.map((form) => form.level === 1 ? <div onClick={() => this.handleSearchCall(form.name)} 
+                    className='evolve-item' 
+                    key={form.name}>
+                    <img className='evolImg' height='100%' src={form.imageUrl} alt={form.name} />
+                    {form.name}
+                  </div> : null)}
+                </div>
+
+                {evolutionChain.find(i => i.level === 2) ? <div className='arrow'>{' -> '}</div> : null}
+                
+                <div className='level-two'
+                  style={{
+                    display: 'flex',
+                    maxWidth: '20em',
+                    justifyContent: 'center',
+                    flexWrap: 'wrap'
+                  }}>
+                  {evolutionChain.map((form) => form.level === 2 ? <div onClick={() => this.handleSearchCall(form.name)} 
+                    className='evolve-item' 
+                    key={form.name}>
+                    <img className='evolImg' height='100%' src={form.imageUrl} alt={form.name} />
+                    {form.name}
+                  </div> : null)}
+                </div>
+
+                {evolutionChain.find(i => i.level === 3) ? <div className='arrow'>{' -> '}</div> : null}
+
+                <div className='level-three'
+                  style={{
+                    display: 'flex',
+                    maxWidth: '20em',
+                    justifyContent: 'center',
+                    flexWrap: 'wrap'
+                  }}>
+                  {evolutionChain.map((form) => form.level === 3 ? <div onClick={() => this.handleSearchCall(form.name)} 
+                    className='evolve-item' 
+                    key={form.name}>
+                    <img className='evolImg' height='100%' src={form.imageUrl} alt={form.name} />
+                    {form.name}
+                  </div> : null)}
+                </div>
+
+                {evolutionChain.find(i => i.level === 4) ? <div className='arrow'>{' -> '}</div> : null}
+
+                <div className='level-four'
+                  style={{
+                    display: 'flex',
+                    maxWidth: '20em',
+                    justifyContent: 'center',
+                    flexWrap: 'wrap'
+                  }}>
+                  {evolutionChain.map((form) => form.level === 4 ? <div onClick={() => this.handleSearchCall(form.name)} 
+                    className='evolve-item' 
+                    key={form.name}>
+                    <img className='evolImg' height='100%' src={form.imageUrl} alt={form.name} />
+                    {form.name}
+                  </div> : null)}
+                </div>
+              </div>
+            </div>) : null}
         </div>
       );
     }
