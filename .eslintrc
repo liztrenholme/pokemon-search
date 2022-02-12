@@ -28,6 +28,9 @@
         "semi": ["error", "always"],
         "quotes": ["error", "single"],
         "no-console": ["error", { "allow": ["warn"] }],
-        "indent": ["error", 2]
+        "template-curly-spacing" : "off",
+        "indent": ["error", 2, {
+            "ignoredNodes": ["TemplateLiteral"]
+        }]
     }
 }
