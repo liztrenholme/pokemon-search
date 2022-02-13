@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Component } from 'react';
 import './main.css';
 import PropTypes from 'prop-types';
@@ -19,7 +20,14 @@ class Main extends Component {
       moves: [],
       types: [],
       evolutionChain: [],
-      deName: ''
+      deName: '',
+      isBaby: false,
+      isMythical: false,
+      isLegendary: false,
+      generation: '',
+      habitat: '',
+      growthRate: '',
+      shape: ''
     }
     // async componentDidMount() {
     //   const eevee = await this.handleSearchCall('eevee');
@@ -37,12 +45,26 @@ class Main extends Component {
       const pokemon = await getPokemonData(typeof newPokemon === 'string' ? newPokemon : this.state.searchInput);
       let evolves = [];
       let deName = '';
+      let isBaby = false;
+      let isMythical = false;
+      let isLegendary = false;
+      let generation = '';
+      let habitat = '';
+      let growthRate = '';
+      let shape = '';
       if (pokemon && pokemon.name) {
         const pokemonId = pokemon.id;
         const speciesData = await getPokemonSpeciesData(pokemonId);
+        isBaby = speciesData.is_baby;
+        isMythical = speciesData.is_mythical;
+        isLegendary = speciesData.is_legendary;
+        generation = speciesData.generation.name;
+        habitat = speciesData.habitat;
+        growthRate = speciesData.growth_rate.name;
+        shape = speciesData.shape.name;
         const evolution = await axios.get(speciesData.evolution_chain.url);
         if (evolution && evolution.data) {
-          const isBaby = evolution.data.chain.species.name;
+          const firstLevel = evolution.data.chain.species.name;
           const evol3 = evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.name;
 
           const manyEvols = [];
@@ -50,9 +72,10 @@ class Main extends Component {
           evolution.data.chain.evolves_to.forEach(i => manyEvols.push({level: 2, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
           // level 3
           evolution.data.chain.evolves_to[0]?.evolves_to.forEach(i => manyEvols.push({level: 3, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
+          evolution.data.chain.evolves_to[1]?.evolves_to.forEach(i => manyEvols.push({level: 3, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
           // level 1
-          if (isBaby) {
-            evolves.push({level: 1, name: isBaby, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.species.url.split('/')[evolution.data.chain.species.url.split('/').length - 2]}.png`});
+          if (firstLevel) {
+            evolves.push({level: 1, name: firstLevel, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.species.url.split('/')[evolution.data.chain.species.url.split('/').length - 2]}.png`});
           }
           // put them all together
           evolves = [...evolves, ...manyEvols];
@@ -76,7 +99,14 @@ class Main extends Component {
           types,
           evolutionChain: evolves,
           searchInput: pokemon.name,
-          deName
+          deName,
+          isBaby,
+          isMythical,
+          isLegendary,
+          generation,
+          habitat,
+          growthRate,
+          shape
         });
       } else if (pokemon && pokemon.includes('404')) {
         this.setState({
@@ -90,7 +120,15 @@ class Main extends Component {
           searchInput: '',
           moves: [],
           types: [],
-          evolutionChain: []
+          evolutionChain: [],
+          isBaby: false,
+          isMythical: false,
+          isLegendary: false,
+          deName: '',
+          generation: '',
+          habitat: '',
+          growthRate: '',
+          shape: ''
         });
       }
     }
@@ -119,9 +157,19 @@ class Main extends Component {
         types,
         searchInput,
         evolutionChain,
-        deName
+        deName,
+        isBaby,
+        isMythical,
+        isLegendary,
+        generation,
+        habitat,
+        growthRate,
+        shape
       } = this.state;
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
+      const lastLetters = generation ? generation.split('-')[1] : '';
+      const temp = generation.split('-')[0];
+      const gen = temp ? temp[0].toUpperCase() + temp.slice(1, temp.length + 1).toLowerCase() + ' ' + lastLetters.toUpperCase() : null;
       return (
         <div className='display'>
           <div>
@@ -137,48 +185,62 @@ class Main extends Component {
               <img className='loading' src={Pokeball} alt='loading'/>
             </div>) :
             (<div className='results-container'>
-              {pokemon ? (<div style={{
-                backgroundColor: 'azure',
-                border: '5px solid #fff',
-                borderRadius: '15px'
-              }}>
-                <div style={{ color: 'black' }}>
-                  <div className='name-container'>
-                    <h2>{pokemonName}</h2>
-                    {deName ? <em>{deName}</em> : null}
+              {pokemon ? (
+                <div style={{
+                  backgroundColor: 'azure',
+                  border: '5px solid #fff',
+                  borderRadius: '15px'
+                }}>
+                  <div style={{ color: 'black' }}>
+                    <div className='name-container'>
+                      <h2>{pokemonName}</h2>
+                      {deName ? <em>{deName}</em> : null}
+                    </div>
+                    {types.length ? <span><ul className='types-list'>
+                      <h3>Type(s):</h3> {types.map(type => <li key={type}>{type}</li>)}
+                    </ul></span> : null}
                   </div>
-                  {types.length ? <span><ul className='types-list'>
-                    <h3>Type(s):</h3> {types.map(type => <li key={type}>{type}</li>)}
-                  </ul></span> : null}
-                </div>
-                {imgFront || imgBack || imgFrontShiny || imgBackShiny ? (
-                  <div 
-                    onClick={this.toggleShinyMode} 
-                    className={shinyMode ? 'shiny-button' : 'normal-button'}>
+                  {imgFront || imgBack || imgFrontShiny || imgBackShiny ? (
+                    <div 
+                      onClick={this.toggleShinyMode} 
+                      className={shinyMode ? 'shiny-button' : 'normal-button'}>
                       Shiny Mode
-                  </div>) : null}
-                {shinyMode ? (<div>
-                  {imgFrontShiny ?
-                    <img className='pokemon-front' src={imgFrontShiny} alt={pokemon} />
-                    : null}
-                  {imgBackShiny ?
-                    <img className='pokemon-front' src={imgBackShiny} alt={pokemon} />
-                    : null}
-                </div>) : (<div>
-                  {imgFront ?
-                    <img className='pokemon-front' src={imgFront} alt={pokemon} />
-                    : null}
-                  {imgBack ?
-                    <img className='pokemon-front' src={imgBack} alt={pokemon} />
-                    : null}
-                </div>)}
-              </div>) : null}
+                    </div>) : null}
+                  {shinyMode ? (<div>
+                    {imgFrontShiny ?
+                      <img className='pokemon-front' src={imgFrontShiny} alt={pokemon} />
+                      : null}
+                    {imgBackShiny ?
+                      <img className='pokemon-front' src={imgBackShiny} alt={pokemon} />
+                      : null}
+                  </div>) : (<div>
+                    {imgFront ?
+                      <img className='pokemon-front' src={imgFront} alt={pokemon} />
+                      : null}
+                    {imgBack ?
+                      <img className='pokemon-front' src={imgBack} alt={pokemon} />
+                      : null}
+                  </div>)}
+                  <div style={{color: 'black', marginTop: 'auto'}}>
+                    {isBaby ? 'This pokemon is a baby!' : null}
+                    {isMythical ? 'This pokemon is mythical.' : null}
+                    {isLegendary ? 'This pokemon is legendary.' : null}
+                  </div>
+                </div>) : null}
               {moves && moves.length ? <div className='moves-list'>
                 <ul>
                   <h3>{moves.length} Moves:</h3> {moves.map(move => <li key={move}>{move}</li>)}
                 </ul>
               </div> : null}
             </div>)}
+          {!isLoading && pokemon ? 
+            <div className='data-rows'>
+              <strong>{gen}</strong>
+              {habitat ? <p>Habitat: {habitat && habitat !== null && typeof habitat === 'string' ? habitat  : habitat.name || ''}</p> : null}
+              {growthRate ? <p>Growth Rate: {growthRate}</p> : null}
+              {shape ? <p>Shape: {shape}</p> : null}
+            </div>
+            : null}
           {!isLoading && evolutionChain && evolutionChain.length ? (
             <div className='evolve-container'>
               <h3>Evolution Chain:</h3>

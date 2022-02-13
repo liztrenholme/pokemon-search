@@ -179,3 +179,19 @@ ul {
     margin: auto;
     white-space: nowrap;
 }
+
+.data-rows {
+    color: black;
+    max-height: 5em;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 1em;
+    background-color: white;
+    border: solid black 3px;
+    border-radius: 15px;
+}
+
+p {
+    margin: 0;
+}
