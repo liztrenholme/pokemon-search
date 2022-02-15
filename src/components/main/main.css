@@ -176,7 +176,7 @@ ul {
 .arrow {
     font-size: 2em;
     font-weight: bold;
-    margin: auto;
+    margin: auto 1em;
     white-space: nowrap;
 }
 

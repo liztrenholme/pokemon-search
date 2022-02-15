@@ -259,7 +259,7 @@ class Main extends Component {
                   {evolutionChain.map((form) => form.level === 1 ? <div onClick={() => this.handleSearchCall(form.name)} 
                     className='evolve-item' 
                     key={form.name}>
-                    <img className='evolImg' height='100%' src={form.imageUrl} alt={form.name} />
+                    <img className='evolImg' height='100%' width='100%' src={form.imageUrl} alt={form.name} />
                     {form.name}
                   </div> : null)}
                 </div>
@@ -272,12 +272,13 @@ class Main extends Component {
                     maxWidth: '20em',
                     justifyContent: 'center',
                     flexWrap: 'wrap',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    maxHeight: '30em',
                   }}>
                   {evolutionChain.map((form) => form.level === 2 ? <div onClick={() => this.handleSearchCall(form.name)} 
                     className='evolve-item' 
                     key={form.name}>
-                    <img className='evolImg' height='100%' src={form.imageUrl} alt={form.name} />
+                    <img className='evolImg' height='100%' width='100%' src={form.imageUrl} alt={form.name} />
                     {form.name}
                   </div> : null)}
                 </div>
@@ -295,7 +296,7 @@ class Main extends Component {
                   {evolutionChain.map((form) => form.level === 3 ? <div onClick={() => this.handleSearchCall(form.name)} 
                     className='evolve-item' 
                     key={form.name}>
-                    <img className='evolImg' height='100%' src={form.imageUrl} alt={form.name} />
+                    <img className='evolImg' height='100%' width='100%' src={form.imageUrl} alt={form.name} />
                     {form.name}
                   </div> : null)}
                 </div>
@@ -313,7 +314,7 @@ class Main extends Component {
                   {evolutionChain.map((form) => form.level === 4 ? <div onClick={() => this.handleSearchCall(form.name)} 
                     className='evolve-item' 
                     key={form.name}>
-                    <img className='evolImg' height='100%' src={form.imageUrl} alt={form.name} />
+                    <img className='evolImg' height='100%' width='100%' src={form.imageUrl} alt={form.name} />
                     {form.name}
                   </div> : null)}
                 </div>
