@@ -170,6 +170,9 @@ class Main extends Component {
       const lastLetters = generation ? generation.split('-')[1] : '';
       const temp = generation.split('-')[0];
       const gen = temp ? temp[0].toUpperCase() + temp.slice(1, temp.length + 1).toLowerCase() + ' ' + lastLetters.toUpperCase() : null;
+      const habitatDisplayed = habitat && habitat !== null && typeof habitat === 'string' ? habitat.split('-').join(' ') : habitat ? habitat.name || '' : '';
+      const growthRateDisplayed = growthRate ? growthRate.split('-').join(' ') : '';
+      const shapeDisplayed = shape ? shape.split('-').join(' ') : '';
       return (
         <div className='display'>
           <div>
@@ -236,9 +239,9 @@ class Main extends Component {
           {!isLoading && pokemon ? 
             <div className='data-rows'>
               <strong>{gen}</strong>
-              {habitat ? <p>Habitat: {habitat && habitat !== null && typeof habitat === 'string' ? habitat  : habitat.name || ''}</p> : null}
-              {growthRate ? <p>Growth Rate: {growthRate}</p> : null}
-              {shape ? <p>Shape: {shape}</p> : null}
+              {habitatDisplayed ? <p>Habitat: {habitatDisplayed}</p> : null}
+              {growthRateDisplayed ? <p>Growth Rate: {growthRateDisplayed}</p> : null}
+              {shapeDisplayed ? <p>Shape: {shapeDisplayed}</p> : null}
             </div>
             : null}
           {!isLoading && evolutionChain && evolutionChain.length ? (
@@ -250,7 +253,8 @@ class Main extends Component {
                     display: 'flex',
                     maxWidth: '20em',
                     justifyContent: 'center',
-                    flexWrap: 'wrap'
+                    flexWrap: 'wrap',
+                    flexDirection: 'column'
                   }}>
                   {evolutionChain.map((form) => form.level === 1 ? <div onClick={() => this.handleSearchCall(form.name)} 
                     className='evolve-item' 
@@ -267,7 +271,8 @@ class Main extends Component {
                     display: 'flex',
                     maxWidth: '20em',
                     justifyContent: 'center',
-                    flexWrap: 'wrap'
+                    flexWrap: 'wrap',
+                    flexDirection: 'column'
                   }}>
                   {evolutionChain.map((form) => form.level === 2 ? <div onClick={() => this.handleSearchCall(form.name)} 
                     className='evolve-item' 
@@ -284,7 +289,8 @@ class Main extends Component {
                     display: 'flex',
                     maxWidth: '20em',
                     justifyContent: 'center',
-                    flexWrap: 'wrap'
+                    flexWrap: 'wrap',
+                    flexDirection: 'column'
                   }}>
                   {evolutionChain.map((form) => form.level === 3 ? <div onClick={() => this.handleSearchCall(form.name)} 
                     className='evolve-item' 
@@ -301,7 +307,8 @@ class Main extends Component {
                     display: 'flex',
                     maxWidth: '20em',
                     justifyContent: 'center',
-                    flexWrap: 'wrap'
+                    flexWrap: 'wrap',
+                    flexDirection: 'column'
                   }}>
                   {evolutionChain.map((form) => form.level === 4 ? <div onClick={() => this.handleSearchCall(form.name)} 
                     className='evolve-item' 
