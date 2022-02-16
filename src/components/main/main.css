@@ -79,7 +79,7 @@ ul {
     background-color: rgb(245, 228, 250);
     color: black;
     border-radius: 15px;
-    font-size: 16;
+    font-size: 1.2em;
     padding: 0.5em;
     margin: 0 0.5em;
     border: solid black 3px;
@@ -149,15 +149,23 @@ ul {
     color: black;
     border: solid black 3px;
     border-radius: 15px;
-    max-height: 25em;
-    padding: 1em;
+    max-height: 30em;
+    padding: 1em 0 0 0;
+    background-color:rgb(255, 255, 255, 0.7);
 }
 
 .evolves-list {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    font-size: 16px;
+    /* width: 80%; */
+    font-size: 18px;
+    overflow: hidden;
+}
+
+@media only screen and (min-width: 500px) {
+    .evolves-list {
+        justify-content: center;
+    }
 }
 
 .evolve-item {
@@ -171,12 +179,14 @@ ul {
 
 .evolImg {
     margin-bottom: -0.75em;
+    width: 110px;
+    height: 110px;
 }
 
 .arrow {
     font-size: 2em;
     font-weight: bold;
-    margin: auto 1em;
+    margin: auto 0;
     white-space: nowrap;
 }
 

@@ -236,7 +236,7 @@ class Main extends Component {
                 </ul>
               </div> : null}
             </div>)}
-          {!isLoading && pokemon ? 
+          {!isLoading && pokemon && (habitatDisplayed || growthRateDisplayed || shapeDisplayed) ? 
             <div className='data-rows'>
               <strong>{gen}</strong>
               {habitatDisplayed ? <p>Habitat: {habitatDisplayed}</p> : null}
@@ -248,76 +248,85 @@ class Main extends Component {
             <div className='evolve-container'>
               <h3>Evolution Chain:</h3>
               <div className='evolves-list'>
-                <div className='level-one'
-                  style={{
-                    display: 'flex',
-                    maxWidth: '20em',
-                    justifyContent: 'center',
-                    flexWrap: 'wrap',
-                    flexDirection: 'column'
-                  }}>
-                  {evolutionChain.map((form) => form.level === 1 ? <div onClick={() => this.handleSearchCall(form.name)} 
-                    className='evolve-item' 
-                    key={form.name}>
-                    <img className='evolImg' height='100%' width='100%' src={form.imageUrl} alt={form.name} />
-                    {form.name}
-                  </div> : null)}
-                </div>
+
+                {evolutionChain.find(i => i.level === 1) ?
+                  <div className='level-one'
+                    style={{
+                      display: 'flex',
+                      maxWidth: '10em',
+                      justifyContent: 'center',
+                      flexWrap: 'wrap',
+                      flexDirection: 'column',
+                      transform: 'scale(0.75, 0.75)'
+                    }}>
+                    {evolutionChain.map((form) => form.level === 1 ? <div onClick={() => this.handleSearchCall(form.name)} 
+                      className='evolve-item' 
+                      key={form.name}>
+                      <img className='evolImg' src={form.imageUrl} alt={form.name} />
+                      {form.name}
+                    </div> : null)}
+                  </div> : null}
 
                 {evolutionChain.find(i => i.level === 2) ? <div className='arrow'>{' -> '}</div> : null}
                 
-                <div className='level-two'
-                  style={{
-                    display: 'flex',
-                    maxWidth: '20em',
-                    justifyContent: 'center',
-                    flexWrap: 'wrap',
-                    flexDirection: 'column',
-                    maxHeight: '30em',
-                  }}>
-                  {evolutionChain.map((form) => form.level === 2 ? <div onClick={() => this.handleSearchCall(form.name)} 
-                    className='evolve-item' 
-                    key={form.name}>
-                    <img className='evolImg' height='100%' width='100%' src={form.imageUrl} alt={form.name} />
-                    {form.name}
-                  </div> : null)}
-                </div>
+                {evolutionChain.find(i => i.level === 2) ?
+                  <div className='level-two'
+                    style={{
+                      display: 'flex',
+                      maxWidth: '10em',
+                      justifyContent: 'center',
+                      flexWrap: 'wrap',
+                      flexDirection: 'column',
+                      maxHeight: '30em',
+                      transform: 'scale(0.75, 0.75)'
+                    }}>
+                    {evolutionChain.map((form) => form.level === 2 ? <div onClick={() => this.handleSearchCall(form.name)} 
+                      className='evolve-item' 
+                      key={form.name}>
+                      <img className='evolImg' src={form.imageUrl} alt={form.name} />
+                      {form.name}
+                    </div> : null)}
+                  </div> : null}
 
                 {evolutionChain.find(i => i.level === 3) ? <div className='arrow'>{' -> '}</div> : null}
 
-                <div className='level-three'
-                  style={{
-                    display: 'flex',
-                    maxWidth: '20em',
-                    justifyContent: 'center',
-                    flexWrap: 'wrap',
-                    flexDirection: 'column'
-                  }}>
-                  {evolutionChain.map((form) => form.level === 3 ? <div onClick={() => this.handleSearchCall(form.name)} 
-                    className='evolve-item' 
-                    key={form.name}>
-                    <img className='evolImg' height='100%' width='100%' src={form.imageUrl} alt={form.name} />
-                    {form.name}
-                  </div> : null)}
-                </div>
+                {evolutionChain.find(i => i.level === 3) ?
+                  <div className='level-three'
+                    style={{
+                      display: 'flex',
+                      maxWidth: '10em',
+                      justifyContent: 'center',
+                      flexWrap: 'wrap',
+                      flexDirection: 'column',
+                      transform: 'scale(0.75, 0.75)'
+                    }}>
+                    {evolutionChain.map((form) => form.level === 3 ? <div onClick={() => this.handleSearchCall(form.name)} 
+                      className='evolve-item' 
+                      key={form.name}>
+                      <img className='evolImg' src={form.imageUrl} alt={form.name} />
+                      {form.name}
+                    </div> : null)}
+                  </div> : null}
 
                 {evolutionChain.find(i => i.level === 4) ? <div className='arrow'>{' -> '}</div> : null}
 
-                <div className='level-four'
-                  style={{
-                    display: 'flex',
-                    maxWidth: '20em',
-                    justifyContent: 'center',
-                    flexWrap: 'wrap',
-                    flexDirection: 'column'
-                  }}>
-                  {evolutionChain.map((form) => form.level === 4 ? <div onClick={() => this.handleSearchCall(form.name)} 
-                    className='evolve-item' 
-                    key={form.name}>
-                    <img className='evolImg' height='100%' width='100%' src={form.imageUrl} alt={form.name} />
-                    {form.name}
-                  </div> : null)}
-                </div>
+                {evolutionChain.find(i => i.level === 4) ?
+                  <div className='level-four'
+                    style={{
+                      display: 'flex',
+                      maxWidth: '10em',
+                      justifyContent: 'center',
+                      flexWrap: 'wrap',
+                      flexDirection: 'column',
+                      transform: 'scale(0.75, 0.75)'
+                    }}>
+                    {evolutionChain.map((form) => form.level === 4 ? <div onClick={() => this.handleSearchCall(form.name)} 
+                      className='evolve-item' 
+                      key={form.name}>
+                      <img className='evolImg' src={form.imageUrl} alt={form.name} />
+                      {form.name}
+                    </div> : null)}
+                  </div> : null}
               </div>
             </div>) : null}
         </div>
