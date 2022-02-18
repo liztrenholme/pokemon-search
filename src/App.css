@@ -5,6 +5,7 @@
   background-attachment: fixed;
   display: flex;
   flex-direction: column;
+  font-family: 'Barlow', sans-serif;
 }
 
 .App-logo {

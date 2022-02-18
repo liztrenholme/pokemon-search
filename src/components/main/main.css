@@ -112,6 +112,7 @@ ul {
     border: solid white 3px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     margin-top: 0.5em;
+    background-size: cover;
 }
 
 .normal-button {
@@ -177,6 +178,7 @@ ul {
     margin-bottom: auto;
     justify-content: space-around;
     font-size: 16px;
+    cursor: pointer;
 }
 
 .evolImg {
