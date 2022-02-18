@@ -192,7 +192,6 @@ ul {
 
 .data-rows {
     color: black;
-    max-height: 15em;
     display: flex;
     flex-direction: column;
     text-align: left;
@@ -200,14 +199,25 @@ ul {
     background-color: white;
     border: solid black 3px;
     border-radius: 15px;
+    /* width: 90%; */
 }
 
 .varieties-box {
     margin-top: 0.5em;
+    display: grid;
+    grid-template-columns: 60% 50%;
+    max-width: 100%;
+    background-color: rgb(240, 255, 255, 0.9);
+    border: solid white 3px;
+    border-radius: 15px;
+    padding: 0.25em;
+    white-space: nowrap;
+    /* text-align: center; */
+    /* max-height: 20em; */
 }
 
 .variety-btn {
-    font-size: 1em;
+    font-size: 0.9em;
     background-color: rgb(245, 228, 250);
     height: 1em;
     width: fit-content;

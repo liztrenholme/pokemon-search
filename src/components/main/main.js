@@ -63,7 +63,6 @@ class Main extends Component {
       if (pokemon && pokemon.name) {
         // const pokemonId = pokemon.id;
         const speciesData = await getAnyUrl(pokemon.species.url); // getPokemonSpeciesData(pokemon.species.url || pokemonId);
-        // const forms = [];
         isBaby = speciesData.is_baby;
         isMythical = speciesData.is_mythical;
         isLegendary = speciesData.is_legendary;
@@ -74,7 +73,8 @@ class Main extends Component {
         const varieties = speciesData.varieties;
         
         if (varieties && varieties.length) {
-          varieties.forEach(form => !form.is_default ? varietiesList.push({name: form.pokemon?.name, url: form.pokemon?.url}) : null);
+          varieties.forEach(form => !form.pokemon?.name.includes('starter') || !form.pokemon?.name.includes('world-cap') 
+            ? varietiesList.push({name: form.pokemon?.name, url: form.pokemon?.url}) : null);
         }
         let evolution = null;
         if (speciesData && speciesData.evolution_chain) {      
@@ -262,9 +262,10 @@ class Main extends Component {
               {habitatDisplayed ? <p>Habitat: {habitatDisplayed}</p> : null}
               {growthRateDisplayed ? <p>Growth Rate: {growthRateDisplayed}</p> : null}
               {shapeDisplayed ? <p>Shape: {shapeDisplayed}</p> : null}
-              {varieties && varieties.length ? <div className='varieties-box'>
-                <strong>Varieties</strong>{varieties.map(variety => (
-                  <div key={variety.name} className='variety-btn' onClick={() => this.handleSearchCall(variety.name)}>{variety.name}</div>
+              {varieties && varieties.length - 1 ? <div className='varieties-box'>
+                <strong>Varieties</strong><div />{varieties.map(variety => (
+                  variety.name !== pokemon ?
+                    <div key={variety.name} className='variety-btn' onClick={() => this.handleSearchCall(variety.name)}>{variety.name}</div> : null
                 ))} </div> : null}
             </div>
             : null}
