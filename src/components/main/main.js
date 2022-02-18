@@ -55,7 +55,6 @@ class Main extends Component {
 
     handleSearchCall = async (newPokemon) => {
       if ((newPokemon && typeof newPokemon === 'string') || this.state.searchInput) {
-        console.log('new pokemon', newPokemon);
         this.setState({ isLoading: true });
         const pokemon = await getPokemonData(typeof newPokemon === 'string' ? newPokemon : this.state.searchInput);
         let evolves = [];
