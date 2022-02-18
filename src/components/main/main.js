@@ -45,6 +45,12 @@ class Main extends Component {
       this.setState({ searchInput: e.target.value });
     }
 
+    handleOnEnter = (e) => {
+      if (e.key === 'Enter') {
+        this.handleSearchCall();
+      }
+    }
+
     toggleShinyMode = () => this.state.shinyMode ? this.setState({shinyMode: false}) : this.setState({shinyMode: true})
 
     handleSearchCall = async (newPokemon) => {
@@ -73,7 +79,7 @@ class Main extends Component {
         const varieties = speciesData.varieties;
         
         if (varieties && varieties.length) {
-          varieties.forEach(form => !form.pokemon?.name.includes('starter') || !form.pokemon?.name.includes('world-cap') 
+          varieties.forEach(form => !form.pokemon?.name.includes('starter') && !form.pokemon?.name.includes('world-cap') 
             ? varietiesList.push({name: form.pokemon?.name, url: form.pokemon?.url}) : null);
         }
         let evolution = null;
@@ -199,10 +205,10 @@ class Main extends Component {
             <h1>Search any Pokemon!</h1>
           </div>
           <div className='search-container'>
-            <input className='search-input' onChange={this.handleUpdateInput} value={searchInput} />
+            <input className='search-input' onKeyDown={this.handleOnEnter} onChange={this.handleUpdateInput} value={searchInput} />
             <div className='search-button' onClick={this.handleSearchCall}>Search!</div>
-            <div className='search-button' onClick={this.handleRandomPokemon}>Random!</div>
           </div>
+          <div className='search-button' onClick={this.handleRandomPokemon}>Random!</div>
           {isLoading ? (
             <div>
               <img className='loading' src={Pokeball} alt='loading'/>
