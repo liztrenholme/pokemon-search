@@ -15,6 +15,20 @@ export const getPokemonData = async (pokemonName) => {
   }
 };
 
+export const getAnyUrl = async (url) => {
+  let data = {};
+  try {
+    data = await axios.get(url);
+    
+  } catch(e) {
+    console.log('error fetching', e);
+    return 'Error ' + e; 
+  }
+  if (data && Object.keys(data)) {
+    return data.data;
+  }
+};
+
 export const getEvolutionData = async (pokemonId) => {
   let data = {};
   try {
