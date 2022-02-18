@@ -54,107 +54,110 @@ class Main extends Component {
     toggleShinyMode = () => this.state.shinyMode ? this.setState({shinyMode: false}) : this.setState({shinyMode: true})
 
     handleSearchCall = async (newPokemon) => {
-      this.setState({ isLoading: true });
-      const pokemon = await getPokemonData(typeof newPokemon === 'string' ? newPokemon : this.state.searchInput);
-      let evolves = [];
-      let deName = '';
-      let isBaby = false;
-      let isMythical = false;
-      let isLegendary = false;
-      let generation = '';
-      let habitat = '';
-      let growthRate = '';
-      let shape = '';
-      const varietiesList = [];
-      if (pokemon && pokemon.name) {
+      if ((newPokemon && typeof newPokemon === 'string') || this.state.searchInput) {
+        console.log('new pokemon', newPokemon);
+        this.setState({ isLoading: true });
+        const pokemon = await getPokemonData(typeof newPokemon === 'string' ? newPokemon : this.state.searchInput);
+        let evolves = [];
+        let deName = '';
+        let isBaby = false;
+        let isMythical = false;
+        let isLegendary = false;
+        let generation = '';
+        let habitat = '';
+        let growthRate = '';
+        let shape = '';
+        const varietiesList = [];
+        if (pokemon && pokemon.name) {
         // const pokemonId = pokemon.id;
-        const speciesData = await getAnyUrl(pokemon.species.url); // getPokemonSpeciesData(pokemon.species.url || pokemonId);
-        isBaby = speciesData.is_baby;
-        isMythical = speciesData.is_mythical;
-        isLegendary = speciesData.is_legendary;
-        generation = speciesData.generation?.name;
-        habitat = speciesData.habitat;
-        growthRate = speciesData.growth_rate?.name;
-        shape = speciesData.shape?.name;
-        const varieties = speciesData.varieties;
+          const speciesData = await getAnyUrl(pokemon.species.url); // getPokemonSpeciesData(pokemon.species.url || pokemonId);
+          isBaby = speciesData.is_baby;
+          isMythical = speciesData.is_mythical;
+          isLegendary = speciesData.is_legendary;
+          generation = speciesData.generation?.name;
+          habitat = speciesData.habitat;
+          growthRate = speciesData.growth_rate?.name;
+          shape = speciesData.shape?.name;
+          const varieties = speciesData.varieties;
         
-        if (varieties && varieties.length) {
-          varieties.forEach(form => !form.pokemon?.name.includes('starter') && !form.pokemon?.name.includes('world-cap') 
-            ? varietiesList.push({name: form.pokemon?.name, url: form.pokemon?.url}) : null);
-        }
-        let evolution = null;
-        if (speciesData && speciesData.evolution_chain) {      
-          evolution = await axios.get(speciesData.evolution_chain.url);
-        }
-        if (evolution && evolution.data) {
-          const firstLevel = evolution.data.chain.species.name;
-          const evol3 = evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.name;
+          if (varieties && varieties.length) {
+            varieties.forEach(form => !form.pokemon?.name.includes('starter') && !form.pokemon?.name.includes('world-cap') 
+              ? varietiesList.push({name: form.pokemon?.name, url: form.pokemon?.url}) : null);
+          }
+          let evolution = null;
+          if (speciesData && speciesData.evolution_chain) {      
+            evolution = await axios.get(speciesData.evolution_chain.url);
+          }
+          if (evolution && evolution.data) {
+            const firstLevel = evolution.data.chain.species.name;
+            const evol3 = evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.name;
 
-          const manyEvols = [];
-          // level 2
-          evolution.data.chain.evolves_to.forEach(i => manyEvols.push({level: 2, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
-          // level 3
-          evolution.data.chain.evolves_to[0]?.evolves_to.forEach(i => manyEvols.push({level: 3, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
-          evolution.data.chain.evolves_to[1]?.evolves_to.forEach(i => manyEvols.push({level: 3, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
-          // level 1
-          if (firstLevel) {
-            evolves.push({level: 1, name: firstLevel, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.species.url.split('/')[evolution.data.chain.species.url.split('/').length - 2]}.png`});
+            const manyEvols = [];
+            // level 2
+            evolution.data.chain.evolves_to.forEach(i => manyEvols.push({level: 2, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
+            // level 3
+            evolution.data.chain.evolves_to[0]?.evolves_to.forEach(i => manyEvols.push({level: 3, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
+            evolution.data.chain.evolves_to[1]?.evolves_to.forEach(i => manyEvols.push({level: 3, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
+            // level 1
+            if (firstLevel) {
+              evolves.push({level: 1, name: firstLevel, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.species.url.split('/')[evolution.data.chain.species.url.split('/').length - 2]}.png`});
+            }
+            // put them all together
+            evolves = [...evolves, ...manyEvols];
+            // level 4 (probably will never be used)
+            if (evol3) {
+              evolves.push({level: 4, name: evol3, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/')[evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/').length - 2]}.png`});
+            }
+            // German name
+            deName = speciesData.names.find(i => i.language.name === 'de').name;
           }
-          // put them all together
-          evolves = [...evolves, ...manyEvols];
-          // level 4 (probably will never be used)
-          if (evol3) {
-            evolves.push({level: 4, name: evol3, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/')[evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/').length - 2]}.png`});
-          }
-          // German name
-          deName = speciesData.names.find(i => i.language.name === 'de').name;
+          const moves = pokemon.moves.map(i => i.move.name);
+          const types = pokemon.types.map(i => i.type.name);
+          this.setState({
+            isLoading: false,
+            pokemon: pokemon.name,
+            imgFront: pokemon.sprites.front_default,
+            imgBack: pokemon.sprites.back_default,
+            imgFrontShiny: pokemon.sprites.front_shiny,
+            imgBackShiny: pokemon.sprites.back_shiny,
+            moves,
+            types,
+            evolutionChain: evolves,
+            searchInput: pokemon.name,
+            deName,
+            isBaby,
+            isMythical,
+            isLegendary,
+            generation,
+            habitat,
+            growthRate,
+            shape,
+            varieties: varietiesList
+          });
+        } else if (pokemon && pokemon.includes('404')) {
+          this.setState({
+            pokemon: 'Try your search again, because this pokemon does not exist!',
+            isLoading: false,
+            shinyMode: false,
+            imgFront: '',
+            imgBack: '',
+            imgFrontShiny: '',
+            imgBackShiny: '',
+            searchInput: '',
+            moves: [],
+            types: [],
+            evolutionChain: [],
+            isBaby: false,
+            isMythical: false,
+            isLegendary: false,
+            deName: '',
+            generation: '',
+            habitat: '',
+            growthRate: '',
+            shape: '',
+            varieties: []
+          });
         }
-        const moves = pokemon.moves.map(i => i.move.name);
-        const types = pokemon.types.map(i => i.type.name);
-        this.setState({
-          isLoading: false,
-          pokemon: pokemon.name,
-          imgFront: pokemon.sprites.front_default,
-          imgBack: pokemon.sprites.back_default,
-          imgFrontShiny: pokemon.sprites.front_shiny,
-          imgBackShiny: pokemon.sprites.back_shiny,
-          moves,
-          types,
-          evolutionChain: evolves,
-          searchInput: pokemon.name,
-          deName,
-          isBaby,
-          isMythical,
-          isLegendary,
-          generation,
-          habitat,
-          growthRate,
-          shape,
-          varieties: varietiesList
-        });
-      } else if (pokemon && pokemon.includes('404')) {
-        this.setState({
-          pokemon: 'Try your search again, because this pokemon does not exist!',
-          isLoading: false,
-          shinyMode: false,
-          imgFront: '',
-          imgBack: '',
-          imgFrontShiny: '',
-          imgBackShiny: '',
-          searchInput: '',
-          moves: [],
-          types: [],
-          evolutionChain: [],
-          isBaby: false,
-          isMythical: false,
-          isLegendary: false,
-          deName: '',
-          generation: '',
-          habitat: '',
-          growthRate: '',
-          shape: '',
-          varieties: []
-        });
       }
     }
 
