@@ -58,10 +58,10 @@ class Main extends Component {
         isBaby = speciesData.is_baby;
         isMythical = speciesData.is_mythical;
         isLegendary = speciesData.is_legendary;
-        generation = speciesData.generation.name;
+        generation = speciesData.generation?.name;
         habitat = speciesData.habitat;
-        growthRate = speciesData.growth_rate.name;
-        shape = speciesData.shape.name;
+        growthRate = speciesData.growth_rate?.name;
+        shape = speciesData.shape?.name;
         const evolution = await axios.get(speciesData.evolution_chain.url);
         if (evolution && evolution.data) {
           const firstLevel = evolution.data.chain.species.name;
