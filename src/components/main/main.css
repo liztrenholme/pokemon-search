@@ -192,7 +192,7 @@ ul {
 
 .data-rows {
     color: black;
-    max-height: 5em;
+    max-height: 15em;
     display: flex;
     flex-direction: column;
     text-align: left;
@@ -200,6 +200,24 @@ ul {
     background-color: white;
     border: solid black 3px;
     border-radius: 15px;
+}
+
+.varieties-box {
+    margin-top: 0.5em;
+}
+
+.variety-btn {
+    font-size: 1em;
+    background-color: rgb(245, 228, 250);
+    height: 1em;
+    width: fit-content;
+    padding: 0.5em;
+    color: black;
+    cursor: pointer;
+    border: solid black 3px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 15px;
+    margin-top: 0.5em;
 }
 
 p {

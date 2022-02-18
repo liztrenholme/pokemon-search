@@ -3,7 +3,13 @@ import React, { Component } from 'react';
 import './main.css';
 import PropTypes from 'prop-types';
 import 'whatwg-fetch';
-import { getPokemonData, getPokemonSpeciesData, getRandomPokemon } from '../../modules';
+import {
+  getPokemonData,
+  // getPokemonSpeciesData,
+  getRandomPokemon,
+  //  getPokemonForms
+  getAnyUrl
+} from '../../modules';
 import Pokeball from '../images/Pokeball.png';
 import axios from 'axios';
 
@@ -27,7 +33,8 @@ class Main extends Component {
       generation: '',
       habitat: '',
       growthRate: '',
-      shape: ''
+      shape: '',
+      varieties: []
     }
     // async componentDidMount() {
     //   const eevee = await this.handleSearchCall('eevee');
@@ -52,9 +59,11 @@ class Main extends Component {
       let habitat = '';
       let growthRate = '';
       let shape = '';
+      const varietiesList = [];
       if (pokemon && pokemon.name) {
-        const pokemonId = pokemon.id;
-        const speciesData = await getPokemonSpeciesData(pokemonId);
+        // const pokemonId = pokemon.id;
+        const speciesData = await getAnyUrl(pokemon.species.url); // getPokemonSpeciesData(pokemon.species.url || pokemonId);
+        // const forms = [];
         isBaby = speciesData.is_baby;
         isMythical = speciesData.is_mythical;
         isLegendary = speciesData.is_legendary;
@@ -62,7 +71,15 @@ class Main extends Component {
         habitat = speciesData.habitat;
         growthRate = speciesData.growth_rate?.name;
         shape = speciesData.shape?.name;
-        const evolution = await axios.get(speciesData.evolution_chain.url);
+        const varieties = speciesData.varieties;
+        
+        if (varieties && varieties.length) {
+          varieties.forEach(form => !form.is_default ? varietiesList.push({name: form.pokemon?.name, url: form.pokemon?.url}) : null);
+        }
+        let evolution = null;
+        if (speciesData && speciesData.evolution_chain) {      
+          evolution = await axios.get(speciesData.evolution_chain.url);
+        }
         if (evolution && evolution.data) {
           const firstLevel = evolution.data.chain.species.name;
           const evol3 = evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.name;
@@ -106,7 +123,8 @@ class Main extends Component {
           generation,
           habitat,
           growthRate,
-          shape
+          shape,
+          varieties: varietiesList
         });
       } else if (pokemon && pokemon.includes('404')) {
         this.setState({
@@ -128,7 +146,8 @@ class Main extends Component {
           generation: '',
           habitat: '',
           growthRate: '',
-          shape: ''
+          shape: '',
+          varieties: []
         });
       }
     }
@@ -164,11 +183,12 @@ class Main extends Component {
         generation,
         habitat,
         growthRate,
-        shape
+        shape,
+        varieties
       } = this.state;
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
       const lastLetters = generation ? generation.split('-')[1] : '';
-      const temp = generation.split('-')[0];
+      const temp = generation?.split('-')[0];
       const gen = temp ? temp[0].toUpperCase() + temp.slice(1, temp.length + 1).toLowerCase() + ' ' + lastLetters.toUpperCase() : null;
       const habitatDisplayed = habitat && habitat !== null && typeof habitat === 'string' ? habitat.split('-').join(' ') : habitat ? habitat.name || '' : '';
       const growthRateDisplayed = growthRate ? growthRate.split('-').join(' ') : '';
@@ -203,7 +223,7 @@ class Main extends Component {
                       <h3>Type(s):</h3> {types.map(type => <li key={type}>{type}</li>)}
                     </ul></span> : null}
                   </div>
-                  {imgFront || imgBack || imgFrontShiny || imgBackShiny ? (
+                  {imgFrontShiny || imgBackShiny ? (
                     <div 
                       onClick={this.toggleShinyMode} 
                       className={shinyMode ? 'shiny-button' : 'normal-button'}>
@@ -242,6 +262,10 @@ class Main extends Component {
               {habitatDisplayed ? <p>Habitat: {habitatDisplayed}</p> : null}
               {growthRateDisplayed ? <p>Growth Rate: {growthRateDisplayed}</p> : null}
               {shapeDisplayed ? <p>Shape: {shapeDisplayed}</p> : null}
+              {varieties && varieties.length ? <div className='varieties-box'>
+                <strong>Varieties</strong>{varieties.map(variety => (
+                  <div key={variety.name} className='variety-btn' onClick={() => this.handleSearchCall(variety.name)}>{variety.name}</div>
+                ))} </div> : null}
             </div>
             : null}
           {!isLoading && evolutionChain && evolutionChain.length ? (
