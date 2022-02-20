@@ -54,9 +54,9 @@ class Main extends Component {
     toggleShinyMode = () => this.state.shinyMode ? this.setState({shinyMode: false}) : this.setState({shinyMode: true})
 
     handleSearchCall = async (newPokemon) => {
-      if ((newPokemon && typeof newPokemon === 'string') || this.state.searchInput) {
+      if ((newPokemon && typeof newPokemon === 'string') || (newPokemon && typeof newPokemon === 'number') || this.state.searchInput) {
         this.setState({ isLoading: true });
-        const pokemon = await getPokemonData(typeof newPokemon === 'string' ? newPokemon : this.state.searchInput);
+        const pokemon = await getPokemonData((typeof newPokemon === 'string') || (typeof newPokemon === 'number') ? newPokemon : this.state.searchInput);
         let evolves = [];
         let deName = '';
         let isBaby = false;
@@ -167,7 +167,7 @@ class Main extends Component {
       }
       this.setState({ isLoading: true });
       if (randomPokemonData && randomPokemonData.name) {
-        this.handleSearchCall(randomPokemonData.name);
+        this.handleSearchCall(randomPokemonData.id);
       }
     }
 
