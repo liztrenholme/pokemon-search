@@ -4,7 +4,7 @@ import axios from 'axios';
 export const getPokemonData = async (pokemonName) => {
   let data = {};
   try {
-    data = await axios.get(`https://pokeapi.co/api/v2/pokemon/${typeof newPokemon === 'string' ? pokemonName.toLowerCase() : pokemonName}`);
+    data = await axios.get(`https://pokeapi.co/api/v2/pokemon/${typeof pokemonName === 'string' ? pokemonName.toLowerCase() : pokemonName}`);
     
   } catch(e) {
     console.log('error fetching', e);
