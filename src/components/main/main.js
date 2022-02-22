@@ -34,12 +34,21 @@ class Main extends Component {
       habitat: '',
       growthRate: '',
       shape: '',
-      varieties: []
+      varieties: [],
+      allPokemon: []
     }
     // async componentDidMount() {
     //   const eevee = await this.handleSearchCall('eevee');
     //   console.log(eevee);
     // }
+
+    async componentDidMount() {
+      const allPokemon = await getAnyUrl('https://pokeapi.co/api/v2/pokemon/?limit=1200');
+      // console.log('all pokemon', allPokemon);
+      if (allPokemon && allPokemon.results) {
+        this.setState({allPokemon: allPokemon.results});
+      }
+    }
 
     handleUpdateInput = (e) => {
       this.setState({ searchInput: e.target.value });
@@ -53,8 +62,12 @@ class Main extends Component {
 
     toggleShinyMode = () => this.state.shinyMode ? this.setState({shinyMode: false}) : this.setState({shinyMode: true})
 
+    checkPokemonName = (pokemonName) => {
+      return this.state.allPokemon.find(i => i.name.includes(pokemonName));
+    }
+    
     handleSearchCall = async (newPokemon) => {
-      console.log('new pokemon.....', newPokemon);
+      
       if ((newPokemon && typeof newPokemon === 'string') || (newPokemon && typeof newPokemon === 'number') || this.state.searchInput) {
         this.setState({ isLoading: true });
         const pokemon = await getPokemonData((typeof newPokemon === 'string') || (typeof newPokemon === 'number') ? newPokemon : this.state.searchInput);
@@ -135,28 +148,33 @@ class Main extends Component {
             varieties: varietiesList
           });
         } else if (pokemon && pokemon.includes('404')) {
-          this.setState({
-            pokemon: 'Try your search again, because this pokemon does not exist!',
-            isLoading: false,
-            shinyMode: false,
-            imgFront: '',
-            imgBack: '',
-            imgFrontShiny: '',
-            imgBackShiny: '',
-            searchInput: '',
-            moves: [],
-            types: [],
-            evolutionChain: [],
-            isBaby: false,
-            isMythical: false,
-            isLegendary: false,
-            deName: '',
-            generation: '',
-            habitat: '',
-            growthRate: '',
-            shape: '',
-            varieties: []
-          });
+          const foundAlternativeName = this.checkPokemonName(this.state.searchInput);
+          if (foundAlternativeName) {
+            this.handleSearchCall(foundAlternativeName.name);
+          } else {
+            this.setState({
+              pokemon: 'Try your search again, because this pokemon does not exist!',
+              isLoading: false,
+              shinyMode: false,
+              imgFront: '',
+              imgBack: '',
+              imgFrontShiny: '',
+              imgBackShiny: '',
+              searchInput: '',
+              moves: [],
+              types: [],
+              evolutionChain: [],
+              isBaby: false,
+              isMythical: false,
+              isLegendary: false,
+              deName: '',
+              generation: '',
+              habitat: '',
+              growthRate: '',
+              shape: '',
+              varieties: []
+            });
+          }
         }
       }
     }
