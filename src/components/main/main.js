@@ -142,7 +142,7 @@ class Main extends Component {
             varieties: varietiesList
           });
         } else if (pokemon && pokemon.includes('404')) {
-          const foundAlternativeName = this.checkPokemonName(this.state.searchInput.toLowerCase());
+          const foundAlternativeName = this.checkPokemonName(this.state.searchInput.toLowerCase().trim());
           if (foundAlternativeName) {
             this.handleSearchCall(foundAlternativeName.name);
           } else {
