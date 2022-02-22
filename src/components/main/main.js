@@ -37,14 +37,9 @@ class Main extends Component {
       varieties: [],
       allPokemon: []
     }
-    // async componentDidMount() {
-    //   const eevee = await this.handleSearchCall('eevee');
-    //   console.log(eevee);
-    // }
 
     async componentDidMount() {
       const allPokemon = await getAnyUrl('https://pokeapi.co/api/v2/pokemon/?limit=1200');
-      // console.log('all pokemon', allPokemon);
       if (allPokemon && allPokemon.results) {
         this.setState({allPokemon: allPokemon.results});
       }
@@ -67,7 +62,6 @@ class Main extends Component {
     }
     
     handleSearchCall = async (newPokemon) => {
-      
       if ((newPokemon && typeof newPokemon === 'string') || (newPokemon && typeof newPokemon === 'number') || this.state.searchInput) {
         this.setState({ isLoading: true });
         const pokemon = await getPokemonData((typeof newPokemon === 'string') || (typeof newPokemon === 'number') ? newPokemon : this.state.searchInput);
@@ -148,7 +142,7 @@ class Main extends Component {
             varieties: varietiesList
           });
         } else if (pokemon && pokemon.includes('404')) {
-          const foundAlternativeName = this.checkPokemonName(this.state.searchInput);
+          const foundAlternativeName = this.checkPokemonName(this.state.searchInput.toLowerCase());
           if (foundAlternativeName) {
             this.handleSearchCall(foundAlternativeName.name);
           } else {
