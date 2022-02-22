@@ -248,7 +248,7 @@ class Main extends Component {
                     <div 
                       onClick={this.toggleShinyMode} 
                       className={shinyMode ? 'shiny-button' : 'normal-button'}>
-                      Shiny Mode
+                      Shiny Mode {shinyMode ? 'On' : 'Off'}
                     </div>) : null}
                   {shinyMode ? (<div>
                     {imgFrontShiny ?

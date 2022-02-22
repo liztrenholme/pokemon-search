@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Main />
-        <h3>Version: {json.version}</h3>
+        <h3 className='version-box'>Version: {json.version}</h3>
       </header>
     </div>
   );
