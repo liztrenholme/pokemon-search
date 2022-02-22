@@ -54,6 +54,7 @@ class Main extends Component {
     toggleShinyMode = () => this.state.shinyMode ? this.setState({shinyMode: false}) : this.setState({shinyMode: true})
 
     handleSearchCall = async (newPokemon) => {
+      console.log('new pokemon.....', newPokemon);
       if ((newPokemon && typeof newPokemon === 'string') || (newPokemon && typeof newPokemon === 'number') || this.state.searchInput) {
         this.setState({ isLoading: true });
         const pokemon = await getPokemonData((typeof newPokemon === 'string') || (typeof newPokemon === 'number') ? newPokemon : this.state.searchInput);
@@ -292,7 +293,7 @@ class Main extends Component {
                       flexDirection: 'column',
                       transform: 'scale(0.75, 0.75)'
                     }}>
-                    {evolutionChain.map((form) => form.level === 1 ? <div onClick={() => this.handleSearchCall(form.name)} 
+                    {evolutionChain.map((form) => form.level === 1 ? <div onClick={() => this.handleSearchCall(form.imageUrl?.split('/')[form.imageUrl.split('/').length - 1].split('.png')[0] || form.name)} 
                       className='evolve-item' 
                       key={form.name}>
                       <img className='evolImg' src={form.imageUrl} alt={form.name} />
@@ -313,7 +314,7 @@ class Main extends Component {
                       maxHeight: '30em',
                       transform: 'scale(0.75, 0.75)'
                     }}>
-                    {evolutionChain.map((form) => form.level === 2 ? <div onClick={() => this.handleSearchCall(form.name)} 
+                    {evolutionChain.map((form) => form.level === 2 ? <div onClick={() => this.handleSearchCall(form.imageUrl?.split('/')[form.imageUrl.split('/').length - 1].split('.png')[0] || form.name)} 
                       className='evolve-item' 
                       key={form.name}>
                       <img className='evolImg' src={form.imageUrl} alt={form.name} />
@@ -333,7 +334,7 @@ class Main extends Component {
                       flexDirection: 'column',
                       transform: 'scale(0.75, 0.75)'
                     }}>
-                    {evolutionChain.map((form) => form.level === 3 ? <div onClick={() => this.handleSearchCall(form.name)} 
+                    {evolutionChain.map((form) => form.level === 3 ? <div onClick={() => this.handleSearchCall(form.imageUrl?.split('/')[form.imageUrl.split('/').length - 1].split('.png')[0] || form.name)} 
                       className='evolve-item' 
                       key={form.name}>
                       <img className='evolImg' src={form.imageUrl} alt={form.name} />
@@ -353,7 +354,7 @@ class Main extends Component {
                       flexDirection: 'column',
                       transform: 'scale(0.75, 0.75)'
                     }}>
-                    {evolutionChain.map((form) => form.level === 4 ? <div onClick={() => this.handleSearchCall(form.name)} 
+                    {evolutionChain.map((form) => form.level === 4 ? <div onClick={() => this.handleSearchCall(form.imageUrl?.split('/')[form.imageUrl.split('/').length - 1].split('.png')[0] || form.name)} 
                       className='evolve-item' 
                       key={form.name}>
                       <img className='evolImg' src={form.imageUrl} alt={form.name} />
