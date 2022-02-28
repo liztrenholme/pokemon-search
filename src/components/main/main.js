@@ -27,6 +27,7 @@ class Main extends Component {
       types: [],
       evolutionChain: [],
       deName: '',
+      jaName: '',
       isBaby: false,
       isMythical: false,
       isLegendary: false,
@@ -35,7 +36,8 @@ class Main extends Component {
       growthRate: '',
       shape: '',
       varieties: [],
-      allPokemon: []
+      allPokemon: [],
+      genus: ''
     }
 
     async componentDidMount() {
@@ -67,6 +69,7 @@ class Main extends Component {
         const pokemon = await getPokemonData((typeof newPokemon === 'string') || (typeof newPokemon === 'number') ? newPokemon : this.state.searchInput);
         let evolves = [];
         let deName = '';
+        let jaName = '';
         let isBaby = false;
         let isMythical = false;
         let isLegendary = false;
@@ -74,6 +77,7 @@ class Main extends Component {
         let habitat = '';
         let growthRate = '';
         let shape = '';
+        let genus = '';
         const varietiesList = [];
         if (pokemon && pokemon.name) {
         // const pokemonId = pokemon.id;
@@ -117,6 +121,8 @@ class Main extends Component {
             }
             // German name
             deName = speciesData.names.find(i => i.language.name === 'de').name;
+            jaName = speciesData.names.find(i => i.language.name === 'ja').name;
+            genus = speciesData.genera?.find(i => i.language.name === 'en').genus;
           }
           const moves = pokemon.moves.map(i => i.move.name);
           const types = pokemon.types.map(i => i.type.name);
@@ -132,6 +138,7 @@ class Main extends Component {
             evolutionChain: evolves,
             searchInput: pokemon.name,
             deName,
+            jaName,
             isBaby,
             isMythical,
             isLegendary,
@@ -139,7 +146,8 @@ class Main extends Component {
             habitat,
             growthRate,
             shape,
-            varieties: varietiesList
+            varieties: varietiesList,
+            genus
           });
         } else if (pokemon && pokemon.includes('404')) {
           const foundAlternativeName = this.checkPokemonName(this.state.searchInput.toLowerCase().trim());
@@ -162,11 +170,13 @@ class Main extends Component {
               isMythical: false,
               isLegendary: false,
               deName: '',
+              jaName: '',
               generation: '',
               habitat: '',
               growthRate: '',
               shape: '',
-              varieties: []
+              varieties: [],
+              genus: ''
             });
           }
         }
@@ -198,6 +208,7 @@ class Main extends Component {
         searchInput,
         evolutionChain,
         deName,
+        jaName,
         isBaby,
         isMythical,
         isLegendary,
@@ -205,7 +216,8 @@ class Main extends Component {
         habitat,
         growthRate,
         shape,
-        varieties
+        varieties,
+        genus
       } = this.state;
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
       const lastLetters = generation ? generation.split('-')[1] : '';
@@ -239,6 +251,8 @@ class Main extends Component {
                     <div className='name-container'>
                       <h2>{pokemonName}</h2>
                       {deName ? <em>{deName}</em> : null}
+                      {jaName ? <em>{jaName}</em> : null}
+                      {genus ? <em>{genus}</em> : null}
                     </div>
                     {types.length ? <span><ul className='types-list'>
                       <h3>Type(s):</h3> {types.map(type => <li key={type}>{type}</li>)}
