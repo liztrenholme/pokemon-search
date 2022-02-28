@@ -252,7 +252,6 @@ class Main extends Component {
                       <h2>{pokemonName}</h2>
                       {deName ? <em>{deName}</em> : null}
                       {jaName ? <em>{jaName}</em> : null}
-                      {genus ? <em>{genus}</em> : null}
                     </div>
                     {types.length ? <span><ul className='types-list'>
                       <h3>Type(s):</h3> {types.map(type => <li key={type}>{type}</li>)}
@@ -297,6 +296,7 @@ class Main extends Component {
               {habitatDisplayed ? <p>Habitat: {habitatDisplayed}</p> : null}
               {growthRateDisplayed ? <p>Growth Rate: {growthRateDisplayed}</p> : null}
               {shapeDisplayed ? <p>Shape: {shapeDisplayed}</p> : null}
+              {genus ? <p>Genus: {genus}</p> : null}
               {varieties && varieties.length - 1 ? <div className='varieties-box'>
                 <strong>Varieties</strong><div />{varieties.map(variety => (
                   variety.name !== pokemon ?
