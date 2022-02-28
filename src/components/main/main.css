@@ -205,6 +205,14 @@ ul {
     border: solid black 3px;
     border-radius: 15px;
     margin-top: 0.5em;
+    max-width: 20em;
+}
+
+.divider {
+    width: 100%;
+    height: 3px;
+    border-top: solid black 3px;
+    margin: 1em 0;
 }
 
 .varieties-box {

@@ -37,7 +37,9 @@ class Main extends Component {
       shape: '',
       varieties: [],
       allPokemon: [],
-      genus: ''
+      genus: '',
+      mainRegion: '',
+      description: ''
     }
 
     async componentDidMount() {
@@ -79,6 +81,8 @@ class Main extends Component {
         let shape = '';
         let genus = '';
         const varietiesList = [];
+        let mainRegion = '';
+        let description = '';
         if (pokemon && pokemon.name) {
         // const pokemonId = pokemon.id;
           const speciesData = await getAnyUrl(pokemon.species.url); // getPokemonSpeciesData(pokemon.species.url || pokemonId);
@@ -86,9 +90,14 @@ class Main extends Component {
           isMythical = speciesData.is_mythical;
           isLegendary = speciesData.is_legendary;
           generation = speciesData.generation?.name;
+          const mainRegionData = await getAnyUrl(speciesData.generation?.url);
+          mainRegion = mainRegionData?.main_region?.name;
           habitat = speciesData.habitat;
           growthRate = speciesData.growth_rate?.name;
           shape = speciesData.shape?.name;
+
+          speciesData.genera?.find(i => i.language.name === 'en').genus;
+          description = speciesData.flavor_text_entries?.find(i => i.language.name === 'en').flavor_text;
           const varieties = speciesData.varieties;
         
           if (varieties && varieties.length) {
@@ -147,7 +156,9 @@ class Main extends Component {
             growthRate,
             shape,
             varieties: varietiesList,
-            genus
+            genus,
+            mainRegion,
+            description
           });
         } else if (pokemon && pokemon.includes('404')) {
           const foundAlternativeName = this.checkPokemonName(this.state.searchInput.toLowerCase().trim());
@@ -176,7 +187,9 @@ class Main extends Component {
               growthRate: '',
               shape: '',
               varieties: [],
-              genus: ''
+              genus: '',
+              mainRegion: '',
+              description: ''
             });
           }
         }
@@ -217,7 +230,9 @@ class Main extends Component {
         growthRate,
         shape,
         varieties,
-        genus
+        genus,
+        mainRegion,
+        description
       } = this.state;
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
       const lastLetters = generation ? generation.split('-')[1] : '';
@@ -229,7 +244,7 @@ class Main extends Component {
       return (
         <div className='display'>
           <div>
-            <h1>Search any Pokemon!</h1>
+            <h1>Search any Pokémon!</h1>
           </div>
           <div className='search-container'>
             <input className='search-input' onKeyDown={this.handleOnEnter} onChange={this.handleUpdateInput} value={searchInput} />
@@ -250,8 +265,8 @@ class Main extends Component {
                   <div style={{ color: 'black' }}>
                     <div className='name-container'>
                       <h2>{pokemonName}</h2>
-                      {deName ? <em>{deName}</em> : null}
-                      {jaName ? <em>{jaName}</em> : null}
+                      {jaName ? <em>Japanese: {jaName}</em> : null}
+                      {deName ? <em>German: {deName}</em> : null}
                     </div>
                     {types.length ? <span><ul className='types-list'>
                       <h3>Type(s):</h3> {types.map(type => <li key={type}>{type}</li>)}
@@ -293,10 +308,13 @@ class Main extends Component {
           {!isLoading && pokemon && (habitatDisplayed || growthRateDisplayed || shapeDisplayed) ? 
             <div className='data-rows'>
               <strong>{gen}</strong>
+              {mainRegion ? <p>Main Region: {mainRegion}</p> : null}
               {habitatDisplayed ? <p>Habitat: {habitatDisplayed}</p> : null}
               {growthRateDisplayed ? <p>Growth Rate: {growthRateDisplayed}</p> : null}
               {shapeDisplayed ? <p>Shape: {shapeDisplayed}</p> : null}
               {genus ? <p>Genus: {genus}</p> : null}
+              {description ? <div className='divider' /> : null}
+              {description ? <p>{description}</p> : null}
               {varieties && varieties.length - 1 ? <div className='varieties-box'>
                 <strong>Varieties</strong><div />{varieties.map(variety => (
                   variety.name !== pokemon ?
