@@ -241,6 +241,8 @@ class Main extends Component {
       const habitatDisplayed = habitat && habitat !== null && typeof habitat === 'string' ? habitat.split('-').join(' ') : habitat ? habitat.name || '' : '';
       const growthRateDisplayed = growthRate ? growthRate.split('-').join(' ') : '';
       const shapeDisplayed = shape ? shape.split('-').join(' ') : '';
+      const formatLev1 = description.split('\f').join(' ').split('POKéMON').join('Pokémon').split(',').join(', ');
+      const formatLev2 = formatLev1.split('\n').join(' ').split('.').join('. ').split(pokemon.toUpperCase())?.join(pokemonName);
       return (
         <div className='display'>
           <div>
@@ -314,7 +316,7 @@ class Main extends Component {
               {shapeDisplayed ? <p>Shape: {shapeDisplayed}</p> : null}
               {genus ? <p>Genus: {genus}</p> : null}
               {description ? <div className='divider' /> : null}
-              {description ? <p>{description}</p> : null}
+              {description ? <p>{formatLev2}</p> : null}
               {varieties && varieties.length - 1 ? <div className='varieties-box'>
                 <strong>Varieties</strong><div />{varieties.map(variety => (
                   variety.name !== pokemon ?
