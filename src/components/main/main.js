@@ -109,6 +109,7 @@ class Main extends Component {
             evolution = await axios.get(speciesData.evolution_chain.url);
           }
           if (evolution && evolution.data) {
+            console.log('item??', evolution.data.baby_trigger_item);
             const firstLevel = evolution.data.chain.species.name;
             const evol3 = evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.name;
 
@@ -333,7 +334,7 @@ class Main extends Component {
                   <div className='level-one'
                     style={{
                       display: 'flex',
-                      maxWidth: '10em',
+                      maxWidth: '5em',
                       justifyContent: 'center',
                       flexWrap: 'wrap',
                       flexDirection: 'column',
@@ -353,7 +354,7 @@ class Main extends Component {
                   <div className='level-two'
                     style={{
                       display: 'flex',
-                      maxWidth: '10em',
+                      maxWidth: '5em',
                       justifyContent: 'center',
                       flexWrap: 'wrap',
                       flexDirection: 'column',
@@ -374,7 +375,7 @@ class Main extends Component {
                   <div className='level-three'
                     style={{
                       display: 'flex',
-                      maxWidth: '10em',
+                      maxWidth: '5em',
                       justifyContent: 'center',
                       flexWrap: 'wrap',
                       flexDirection: 'column',
@@ -394,7 +395,7 @@ class Main extends Component {
                   <div className='level-four'
                     style={{
                       display: 'flex',
-                      maxWidth: '10em',
+                      maxWidth: '5em',
                       justifyContent: 'center',
                       flexWrap: 'wrap',
                       flexDirection: 'column',
