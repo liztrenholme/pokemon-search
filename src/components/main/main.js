@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react';
 import './main.css';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import 'whatwg-fetch';
 import {
   getPokemonData,
@@ -11,6 +11,7 @@ import {
   getAnyUrl
 } from '../../modules';
 import Pokeball from '../images/Pokeball.png';
+import Evolution from '../Evolution';
 import axios from 'axios';
 
 class Main extends Component {
@@ -109,26 +110,67 @@ class Main extends Component {
             evolution = await axios.get(speciesData.evolution_chain.url);
           }
           if (evolution && evolution.data) {
-            console.log('item??', evolution.data.baby_trigger_item);
             const firstLevel = evolution.data.chain.species.name;
             const evol3 = evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.name;
 
             const manyEvols = [];
             // level 2
-            evolution.data.chain.evolves_to.forEach(i => manyEvols.push({level: 2, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
+            evolution.data.chain.evolves_to.forEach(i => manyEvols.push(
+              {
+                level: 2, 
+                name: i.species.name, 
+                imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`,
+                evolveItem: i.evolution_details[0].held_item?.name.split('-').join(' '),
+                evolveItemUrl: i.evolution_details[0].held_item?.url
+              }
+            ));
             // level 3
-            evolution.data.chain.evolves_to[0]?.evolves_to.forEach(i => manyEvols.push({level: 3, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
-            evolution.data.chain.evolves_to[1]?.evolves_to.forEach(i => manyEvols.push({level: 3, name: i.species.name, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`}));
+            evolution.data.chain.evolves_to[0]?.evolves_to.forEach(i => manyEvols.push(
+              {
+                level: 3, 
+                name: i.species.name, 
+                imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`,
+                evolveItem: i.evolution_details[0].held_item?.name,
+                evolveItemUrl: i.evolution_details[0].held_item?.url
+              }
+            ));
+            evolution.data.chain.evolves_to[1]?.evolves_to.forEach(i => manyEvols.push(
+              {
+                level: 3, 
+                name: i.species.name, 
+                imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`,
+                evolveItem: i.evolution_details[0].held_item?.name.split('-').join(' '),
+                evolveItemUrl: i.evolution_details[0].held_item?.url
+              }
+            ));
             // level 1
             if (firstLevel) {
-              evolves.push({level: 1, name: firstLevel, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.species.url.split('/')[evolution.data.chain.species.url.split('/').length - 2]}.png`});
+              evolves.push({
+                level: 1, 
+                name: firstLevel, 
+                imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.species.url.split('/')[evolution.data.chain.species.url.split('/').length - 2]}.png`,
+              });
+            }
+            // level 4 (probably will never be used)
+            if (evol3) {
+              evolves.push({
+                level: 4, 
+                name: evol3, 
+                imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/')[evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/').length - 2]}.png`});
             }
             // put them all together
             evolves = [...evolves, ...manyEvols];
-            // level 4 (probably will never be used)
-            if (evol3) {
-              evolves.push({level: 4, name: evol3, imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/')[evolution.data.chain.evolves_to[0]?.evolves_to[0]?.evolves_to[0]?.species.url.split('/').length - 2]}.png`});
-            }
+            // get any evolve item images and data
+            evolves.forEach(async i => { 
+              let itemData = '';
+              if (i.evolveItemUrl) {
+                itemData = await getAnyUrl(i.evolveItemUrl);
+                console.log(itemData);
+                i.evolveItemImg = itemData.sprites.default;
+                this.setState({evolutionChain: evolves});
+              }
+            });
+
             // German name
             deName = speciesData.names.find(i => i.language.name === 'de').name;
             jaName = speciesData.names.find(i => i.language.name === 'ja').name;
@@ -331,83 +373,38 @@ class Main extends Component {
               <div className='evolves-list'>
 
                 {evolutionChain.find(i => i.level === 1) ?
-                  <div className='level-one'
-                    style={{
-                      display: 'flex',
-                      maxWidth: '5em',
-                      justifyContent: 'center',
-                      flexWrap: 'wrap',
-                      flexDirection: 'column',
-                      transform: 'scale(0.75, 0.75)'
-                    }}>
-                    {evolutionChain.map((form) => form.level === 1 ? <div onClick={() => this.handleSearchCall(form.imageUrl?.split('/')[form.imageUrl.split('/').length - 1].split('.png')[0] || form.name)} 
-                      className='evolve-item' 
-                      key={form.name}>
-                      <img className='evolImg' src={form.imageUrl} alt={form.name} />
-                      {form.name}
-                    </div> : null)}
-                  </div> : null}
+                  <Evolution
+                    evolutionChain={evolutionChain}
+                    handleSearchCall={this.handleSearchCall}
+                    selectedLevel={1} />
+                  : null}
 
                 {evolutionChain.find(i => i.level === 2) ? <div className='arrow'>{' -> '}</div> : null}
                 
                 {evolutionChain.find(i => i.level === 2) ?
-                  <div className='level-two'
-                    style={{
-                      display: 'flex',
-                      maxWidth: '5em',
-                      justifyContent: 'center',
-                      flexWrap: 'wrap',
-                      flexDirection: 'column',
-                      maxHeight: '30em',
-                      transform: 'scale(0.75, 0.75)'
-                    }}>
-                    {evolutionChain.map((form) => form.level === 2 ? <div onClick={() => this.handleSearchCall(form.imageUrl?.split('/')[form.imageUrl.split('/').length - 1].split('.png')[0] || form.name)} 
-                      className='evolve-item' 
-                      key={form.name}>
-                      <img className='evolImg' src={form.imageUrl} alt={form.name} />
-                      {form.name}
-                    </div> : null)}
-                  </div> : null}
+                  <Evolution
+                    evolutionChain={evolutionChain}
+                    handleSearchCall={this.handleSearchCall}
+                    selectedLevel={2} />
+                  : null}
 
                 {evolutionChain.find(i => i.level === 3) ? <div className='arrow'>{' -> '}</div> : null}
 
                 {evolutionChain.find(i => i.level === 3) ?
-                  <div className='level-three'
-                    style={{
-                      display: 'flex',
-                      maxWidth: '5em',
-                      justifyContent: 'center',
-                      flexWrap: 'wrap',
-                      flexDirection: 'column',
-                      transform: 'scale(0.75, 0.75)'
-                    }}>
-                    {evolutionChain.map((form) => form.level === 3 ? <div onClick={() => this.handleSearchCall(form.imageUrl?.split('/')[form.imageUrl.split('/').length - 1].split('.png')[0] || form.name)} 
-                      className='evolve-item' 
-                      key={form.name}>
-                      <img className='evolImg' src={form.imageUrl} alt={form.name} />
-                      {form.name}
-                    </div> : null)}
-                  </div> : null}
+                  <Evolution
+                    evolutionChain={evolutionChain}
+                    handleSearchCall={this.handleSearchCall}
+                    selectedLevel={3} />
+                  : null}
 
                 {evolutionChain.find(i => i.level === 4) ? <div className='arrow'>{' -> '}</div> : null}
 
                 {evolutionChain.find(i => i.level === 4) ?
-                  <div className='level-four'
-                    style={{
-                      display: 'flex',
-                      maxWidth: '5em',
-                      justifyContent: 'center',
-                      flexWrap: 'wrap',
-                      flexDirection: 'column',
-                      transform: 'scale(0.75, 0.75)'
-                    }}>
-                    {evolutionChain.map((form) => form.level === 4 ? <div onClick={() => this.handleSearchCall(form.imageUrl?.split('/')[form.imageUrl.split('/').length - 1].split('.png')[0] || form.name)} 
-                      className='evolve-item' 
-                      key={form.name}>
-                      <img className='evolImg' src={form.imageUrl} alt={form.name} />
-                      {form.name}
-                    </div> : null)}
-                  </div> : null}
+                  <Evolution
+                    evolutionChain={evolutionChain}
+                    handleSearchCall={this.handleSearchCall}
+                    selectedLevel={4} />
+                  : null}
               </div>
             </div>) : null}
         </div>
@@ -416,7 +413,7 @@ class Main extends Component {
 }
 
 Main.propTypes = {
-  color: PropTypes.string
+  // color: PropTypes.string
 };
 
 export default Main;
