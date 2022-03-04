@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
 import './evolution.css';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class Evolution extends Component {
@@ -8,7 +8,7 @@ class Evolution extends Component {
       <div className='level-two'
         style={{
           display: 'flex',
-          maxWidth: '5em',
+          maxWidth: '6em',
           justifyContent: 'center',
           flexWrap: 'wrap',
           flexDirection: 'column',
@@ -19,12 +19,12 @@ class Evolution extends Component {
           className='evolve-item' 
           key={form.name}>
           <div className='images-box'>
-            <img className='evolImg' src={form.imageUrl} alt={form.name} />
             {form.evolveItemImg ? <img className='held-item' src={form.evolveItemImg} alt={form.evolveItem} /> : null}
+            <img className='evolImg' src={form.imageUrl} alt={form.name} />
           </div>
+          {form.evolveItem ? <span>+ {form.evolveItem}</span> : null}
           {form.name}
 
-          {form.evolveItem ? <span>with {form.evolveItem}</span> : null}
         </div> : null)}
       </div>
     );

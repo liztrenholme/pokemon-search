@@ -21,8 +21,12 @@ class Main extends Component {
       pokemon: '',
       imgFront: '',
       imgBack: '',
+      imgFrontFemale: '',
+      imgBackFemale: '',
       imgFrontShiny: '',
       imgBackShiny: '',
+      imgFrontShinyFemale: '',
+      imgBackShinyFemale: '',
       searchInput: '',
       moves: [],
       types: [],
@@ -40,7 +44,8 @@ class Main extends Component {
       allPokemon: [],
       genus: '',
       mainRegion: '',
-      description: ''
+      description: '',
+      pokedexId: ''
     }
 
     async componentDidMount() {
@@ -185,6 +190,10 @@ class Main extends Component {
             imgBack: pokemon.sprites.back_default,
             imgFrontShiny: pokemon.sprites.front_shiny,
             imgBackShiny: pokemon.sprites.back_shiny,
+            imgFrontFemale: pokemon.sprites.front_female,
+            imgBackFemale: pokemon.sprites.back_female,
+            imgFrontShinyFemale: pokemon.sprites.front_shiny_female,
+            imgBackShinyFemale: pokemon.sprites.back_shiny_female,
             moves,
             types,
             evolutionChain: evolves,
@@ -201,7 +210,8 @@ class Main extends Component {
             varieties: varietiesList,
             genus,
             mainRegion,
-            description
+            description,
+            pokedexId: speciesData.pokedex_numbers[0]?.entry_number
           });
         } else if (pokemon && pokemon.includes('404')) {
           const foundAlternativeName = this.checkPokemonName(this.state.searchInput.toLowerCase().trim());
@@ -214,8 +224,12 @@ class Main extends Component {
               shinyMode: false,
               imgFront: '',
               imgBack: '',
+              imgFrontFemale: '',
+              imgBackFemale: '',
               imgFrontShiny: '',
               imgBackShiny: '',
+              imgFrontShinyFemale: '',
+              imgBackShinyFemale: '',
               searchInput: '',
               moves: [],
               types: [],
@@ -232,7 +246,8 @@ class Main extends Component {
               varieties: [],
               genus: '',
               mainRegion: '',
-              description: ''
+              description: '',
+              pokedexId: ''
             });
           }
         }
@@ -250,6 +265,8 @@ class Main extends Component {
       }
     }
 
+    clearInput = () => this.setState({searchInput: ''})
+
     render() {
       const {
         pokemon, 
@@ -258,6 +275,10 @@ class Main extends Component {
         imgBack,
         imgFrontShiny,
         imgBackShiny,
+        imgFrontFemale,
+        imgBackFemale,
+        imgFrontShinyFemale,
+        imgBackShinyFemale,
         shinyMode,
         isLoading,
         types,
@@ -275,7 +296,8 @@ class Main extends Component {
         varieties,
         genus,
         mainRegion,
-        description
+        description,
+        pokedexId
       } = this.state;
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
       const lastLetters = generation ? generation.split('-')[1] : '';
@@ -292,7 +314,13 @@ class Main extends Component {
             <h1>Search any Pokémon!</h1>
           </div>
           <div className='search-container'>
-            <input className='search-input' onKeyDown={this.handleOnEnter} onChange={this.handleUpdateInput} value={searchInput} />
+            <input 
+              className='search-input' 
+              onKeyDown={this.handleOnEnter} 
+              onChange={this.handleUpdateInput} 
+              value={searchInput}
+              placeholder='Name or Pokédex ID...' />
+            <div className='clear' onClick={this.clearInput}>x</div>
             <div className='search-button' onClick={this.handleSearchCall}>Search!</div>
           </div>
           <div className='search-button' onClick={this.handleRandomPokemon}>Random!</div>
@@ -323,20 +351,44 @@ class Main extends Component {
                       className={shinyMode ? 'shiny-button' : 'normal-button'}>
                       Shiny Mode {shinyMode ? 'On' : 'Off'}
                     </div>) : null}
-                  {shinyMode ? (<div>
-                    {imgFrontShiny ?
-                      <img className='pokemon-front' src={imgFrontShiny} alt={pokemon} />
-                      : null}
-                    {imgBackShiny ?
-                      <img className='pokemon-front' src={imgBackShiny} alt={pokemon} />
-                      : null}
-                  </div>) : (<div>
-                    {imgFront ?
-                      <img className='pokemon-front' src={imgFront} alt={pokemon} />
-                      : null}
-                    {imgBack ?
-                      <img className='pokemon-front' src={imgBack} alt={pokemon} />
-                      : null}
+                  {shinyMode ? (<div className='picture-box'>
+                    {imgBackShinyFemale || imgFrontShinyFemale ? 'Male:' : null}
+                    <div className='picture-group'>
+                      {imgFrontShiny ?
+                        <img className='pokemon-front' src={imgFrontShiny} alt={pokemon} />
+                        : null}
+                      {imgBackShiny ?
+                        <img className='pokemon-front' src={imgBackShiny} alt={pokemon} />
+                        : null}
+                    </div>
+                    {imgBackShinyFemale || imgFrontShinyFemale ? 'Female:' : null}
+                    <div className='picture-group'>
+                      {imgFrontShinyFemale ?
+                        <img className='pokemon-front' src={imgFrontShinyFemale} alt={pokemon} />
+                        : null}
+                      {imgBackShinyFemale ?
+                        <img className='pokemon-front' src={imgBackShinyFemale} alt={pokemon} />
+                        : null}
+                    </div>
+                  </div>) : (<div className='picture-box'>
+                    {imgBackFemale || imgFrontFemale ? 'Male:' : null}
+                    <div className='picture-group'>
+                      {imgFront ?
+                        <img className='pokemon-front' src={imgFront} alt={pokemon} />
+                        : null}
+                      {imgBack ?
+                        <img className='pokemon-front' src={imgBack} alt={pokemon} />
+                        : null}
+                    </div>
+                    {imgBackFemale || imgFrontFemale ? 'Female:' : null}
+                    <div className='picture-group'>
+                      {imgFrontFemale ?
+                        <img className='pokemon-front' src={imgFrontFemale} alt={pokemon} />
+                        : null}
+                      {imgBackFemale ?
+                        <img className='pokemon-front' src={imgBackFemale} alt={pokemon} />
+                        : null}
+                    </div>
                   </div>)}
                   <div style={{color: 'black', marginTop: 'auto'}}>
                     {isBaby ? 'This pokemon is a baby!' : null}
@@ -358,6 +410,7 @@ class Main extends Component {
               {growthRateDisplayed ? <p>Growth Rate: {growthRateDisplayed}</p> : null}
               {shapeDisplayed ? <p>Shape: {shapeDisplayed}</p> : null}
               {genus ? <p>Genus: {genus}</p> : null}
+              {pokedexId && pokedexId < 899 ? <p>Pokédex ID: {pokedexId}</p> : null}
               {description ? <div className='divider' /> : null}
               {description ? <p>{formatLev2}</p> : null}
               {varieties && varieties.length - 1 ? <div className='varieties-box'>
@@ -379,7 +432,7 @@ class Main extends Component {
                     selectedLevel={1} />
                   : null}
 
-                {evolutionChain.find(i => i.level === 2) ? <div className='arrow'>{' -> '}</div> : null}
+                {evolutionChain.find(i => i.level === 2) ? <div className='arrow'>{' > '}</div> : null}
                 
                 {evolutionChain.find(i => i.level === 2) ?
                   <Evolution
@@ -388,7 +441,7 @@ class Main extends Component {
                     selectedLevel={2} />
                   : null}
 
-                {evolutionChain.find(i => i.level === 3) ? <div className='arrow'>{' -> '}</div> : null}
+                {evolutionChain.find(i => i.level === 3) ? <div className='arrow'>{' > '}</div> : null}
 
                 {evolutionChain.find(i => i.level === 3) ?
                   <Evolution
@@ -397,14 +450,14 @@ class Main extends Component {
                     selectedLevel={3} />
                   : null}
 
-                {evolutionChain.find(i => i.level === 4) ? <div className='arrow'>{' -> '}</div> : null}
+                {/* {evolutionChain.find(i => i.level === 4) ? <div className='arrow'>{' > '}</div> : null}
 
                 {evolutionChain.find(i => i.level === 4) ?
                   <Evolution
                     evolutionChain={evolutionChain}
                     handleSearchCall={this.handleSearchCall}
                     selectedLevel={4} />
-                  : null}
+                  : null} */}
               </div>
             </div>) : null}
         </div>
