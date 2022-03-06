@@ -12,6 +12,7 @@ import {
 } from '../../modules';
 import Pokeball from '../images/Pokeball.png';
 import Evolution from '../Evolution';
+import Explore from '../Explore';
 import axios from 'axios';
 
 class Main extends Component {
@@ -45,7 +46,10 @@ class Main extends Component {
       genus: '',
       mainRegion: '',
       description: '',
-      pokedexId: ''
+      pokedexId: '',
+      regionSpecies: '',
+      shapeSpecies: '',
+      growthRateSpecies: ''
     }
 
     async componentDidMount() {
@@ -89,6 +93,9 @@ class Main extends Component {
         const varietiesList = [];
         let mainRegion = '';
         let description = '';
+        let regionSpecies = '';
+        let shapeSpecies = '';
+        let growthRateSpecies = '';
         if (pokemon && pokemon.name) {
         // const pokemonId = pokemon.id;
           const speciesData = await getAnyUrl(pokemon.species.url); // getPokemonSpeciesData(pokemon.species.url || pokemonId);
@@ -98,6 +105,15 @@ class Main extends Component {
           generation = speciesData.generation?.name;
           const mainRegionData = await getAnyUrl(speciesData.generation?.url);
           mainRegion = mainRegionData?.main_region?.name;
+          regionSpecies = mainRegionData?.pokemon_species;
+          const shapeSpeciesData = await getAnyUrl(speciesData?.shape?.url);
+          if (shapeSpeciesData.pokemon_species) {
+            shapeSpecies = shapeSpeciesData.pokemon_species;
+          }
+          const growthRateSpeciesData = await getAnyUrl(speciesData?.growth_rate?.url);
+          if (growthRateSpeciesData.pokemon_species) {
+            growthRateSpecies = growthRateSpeciesData.pokemon_species;
+          }
           habitat = speciesData.habitat;
           growthRate = speciesData.growth_rate?.name;
           shape = speciesData.shape?.name;
@@ -211,7 +227,10 @@ class Main extends Component {
             genus,
             mainRegion,
             description,
-            pokedexId: speciesData.pokedex_numbers[0]?.entry_number
+            pokedexId: speciesData.pokedex_numbers[0]?.entry_number,
+            regionSpecies,
+            shapeSpecies,
+            growthRateSpecies
           });
         } else if (pokemon && pokemon.includes('404')) {
           const foundAlternativeName = this.checkPokemonName(this.state.searchInput.toLowerCase().trim());
@@ -247,7 +266,10 @@ class Main extends Component {
               genus: '',
               mainRegion: '',
               description: '',
-              pokedexId: ''
+              pokedexId: '',
+              regionSpecies: [],
+              shapeSpecies: [],
+              growthRateSpecies: []
             });
           }
         }
@@ -297,7 +319,11 @@ class Main extends Component {
         genus,
         mainRegion,
         description,
-        pokedexId
+        pokedexId,
+        allPokemon,
+        regionSpecies,
+        shapeSpecies,
+        growthRateSpecies
       } = this.state;
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
       const lastLetters = generation ? generation.split('-')[1] : '';
@@ -413,11 +439,36 @@ class Main extends Component {
               {pokedexId && pokedexId < 899 ? <p>Pokédex ID: {pokedexId}</p> : null}
               {description ? <div className='divider' /> : null}
               {description ? <p>{formatLev2}</p> : null}
+              {varieties && varieties.length - 1 ? <strong><p className='varieties-header'>Varieties</p></strong> : null}
               {varieties && varieties.length - 1 ? <div className='varieties-box'>
-                <strong>Varieties</strong><div />{varieties.map(variety => (
+                
+                {varieties.map(variety => (
                   variety.name !== pokemon ?
                     <div key={variety.name} className='variety-btn' onClick={() => this.handleSearchCall(variety.name)}>{variety.name}</div> : null
                 ))} </div> : null}
+              {gen || shape || growthRate ? <div className='divider' /> : null}
+              {gen || shape || growthRate ? <strong><p className='varieties-header'>Explore</p></strong> : null}
+              {gen || shape || growthRate ? <div className='varieties-box'>
+                {gen ?
+                  <Explore 
+                    header={gen} 
+                    allPokemon={allPokemon} 
+                    regionSpecies={regionSpecies} 
+                    handleSearchCall={this.handleSearchCall} /> : null}
+                {shape ?
+                  <Explore 
+                    header={shape} 
+                    allPokemon={allPokemon} 
+                    regionSpecies={shapeSpecies} 
+                    handleSearchCall={this.handleSearchCall} /> : null}
+                {growthRate ?
+                  <Explore 
+                    header={`${growthRate} growth rate`} 
+                    allPokemon={allPokemon} 
+                    regionSpecies={growthRateSpecies} 
+                    handleSearchCall={this.handleSearchCall} /> : null}
+              </div>
+                : null}
             </div>
             : null}
           {!isLoading && evolutionChain && evolutionChain.length ? (
