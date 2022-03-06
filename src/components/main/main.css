@@ -227,6 +227,7 @@ ul {
     font-weight: bold;
     margin: auto 0;
     white-space: nowrap;
+    padding: 0 0.1em;
 }
 
 .data-rows {

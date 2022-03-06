@@ -74,6 +74,8 @@ class Main extends Component {
     checkPokemonName = (pokemonName) => {
       return this.state.allPokemon.find(i => i.name.includes(pokemonName));
     }
+
+    populateInput = (input) => this.setState({searchInput: input})
     
     handleSearchCall = async (newPokemon) => {
       if ((newPokemon && typeof newPokemon === 'string') || (newPokemon && typeof newPokemon === 'number') || this.state.searchInput) {
@@ -186,7 +188,6 @@ class Main extends Component {
               let itemData = '';
               if (i.evolveItemUrl) {
                 itemData = await getAnyUrl(i.evolveItemUrl);
-                console.log(itemData);
                 i.evolveItemImg = itemData.sprites.default;
                 this.setState({evolutionChain: evolves});
               }
@@ -198,7 +199,15 @@ class Main extends Component {
             genus = speciesData.genera?.find(i => i.language.name === 'en').genus;
           }
           const moves = pokemon.moves.map(i => i.move.name);
-          const types = pokemon.types.map(i => i.type.name);
+          const types = [];
+          pokemon.types.forEach(async (i) => {
+            const typeData = await getAnyUrl(i.type.url);
+            if (typeData) {
+              types.push({name: i.type.name, url: i.type.url, data: typeData});
+            }
+            this.setState({types});
+          });
+
           this.setState({
             isLoading: false,
             pokemon: pokemon.name,
@@ -320,7 +329,7 @@ class Main extends Component {
         mainRegion,
         description,
         pokedexId,
-        allPokemon,
+        // allPokemon,
         regionSpecies,
         shapeSpecies,
         growthRateSpecies
@@ -368,12 +377,12 @@ class Main extends Component {
                       {deName ? <em>German: {deName}</em> : null}
                     </div>
                     {types.length ? <span><ul className='types-list'>
-                      <h3>Type(s):</h3> {types.map(type => <li key={type}>{type}</li>)}
+                      <h3>Type(s):</h3> {types.map(type => <li key={type.name}>{type.name}</li>)}
                     </ul></span> : null}
                   </div>
                   {imgFrontShiny || imgBackShiny ? (
                     <div 
-                      onClick={this.toggleShinyMode} 
+                      onClick={this.toggleShinyMode}
                       className={shinyMode ? 'shiny-button' : 'normal-button'}>
                       Shiny Mode {shinyMode ? 'On' : 'Off'}
                     </div>) : null}
@@ -446,29 +455,6 @@ class Main extends Component {
                   variety.name !== pokemon ?
                     <div key={variety.name} className='variety-btn' onClick={() => this.handleSearchCall(variety.name)}>{variety.name}</div> : null
                 ))} </div> : null}
-              {gen || shape || growthRate ? <div className='divider' /> : null}
-              {gen || shape || growthRate ? <strong><p className='varieties-header'>Explore</p></strong> : null}
-              {gen || shape || growthRate ? <div className='varieties-box'>
-                {gen ?
-                  <Explore 
-                    header={gen} 
-                    allPokemon={allPokemon} 
-                    regionSpecies={regionSpecies} 
-                    handleSearchCall={this.handleSearchCall} /> : null}
-                {shape ?
-                  <Explore 
-                    header={shape} 
-                    allPokemon={allPokemon} 
-                    regionSpecies={shapeSpecies} 
-                    handleSearchCall={this.handleSearchCall} /> : null}
-                {growthRate ?
-                  <Explore 
-                    header={`${growthRate} growth rate`} 
-                    allPokemon={allPokemon} 
-                    regionSpecies={growthRateSpecies} 
-                    handleSearchCall={this.handleSearchCall} /> : null}
-              </div>
-                : null}
             </div>
             : null}
           {!isLoading && evolutionChain && evolutionChain.length ? (
@@ -509,6 +495,41 @@ class Main extends Component {
                     handleSearchCall={this.handleSearchCall}
                     selectedLevel={4} />
                   : null} */}
+              </div>
+              <div className='explore-box'>
+                {gen || shape || growthRate ? <div className='divider' /> : null}
+                {gen || shape || growthRate ? <strong><p className='varieties-header'>Explore</p></strong> : null}
+                {gen || shape || growthRate ? <div className='varieties-box'>
+                  {gen ?
+                    <Explore 
+                      header={gen} 
+                      regionSpecies={regionSpecies} 
+                      populateInput={this.populateInput}
+                      handleSearchCall={this.handleSearchCall} /> : null}
+                  {shape ?
+                    <Explore 
+                      header={shape} 
+                      regionSpecies={shapeSpecies} 
+                      populateInput={this.populateInput}
+                      handleSearchCall={this.handleSearchCall} /> : null}
+                  {growthRate ?
+                    <Explore 
+                      header={`${growthRate} growth rate`} 
+                      regionSpecies={growthRateSpecies}
+                      populateInput={this.populateInput}
+                      handleSearchCall={this.handleSearchCall} /> : null}
+                  {types && types.length ?
+                    types.map(type => 
+                      <Explore 
+                        key={type.name} 
+                        header={`${type.name} type`} 
+                        regionSpecies={type.data.pokemon.map(i => {return {name: i.pokemon.name, url: i.pokemon.url};}).filter(j => !j.name.includes('totem'))} 
+                        populateInput={this.populateInput}
+                        handleSearchCall={this.handleSearchCall} />
+                    ) : null
+                  }
+                </div>
+                  : null}
               </div>
             </div>) : null}
         </div>
