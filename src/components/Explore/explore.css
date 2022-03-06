@@ -1,0 +1,59 @@
+.explore-species-modal {
+    position: fixed;
+    z-index: 100000010;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 5px 5px 20px #222;
+    width: 50%;
+    max-height: 80%;
+    overflow: scroll;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@media only screen and (max-width: 500px) {
+    .explore-species-modal {
+        width: 90%;
+    }
+}
+
+.fixed-header {
+    display: flex;
+    flex-direction: row;
+    font-size: 1em;
+    align-items: flex-end;
+    align-content: space-between;
+    text-align: right;
+    position: sticky; 
+    top: 0;
+    background-color: #fff;
+    width: 100%;
+    font-weight: bolder;
+}
+
+.header-title {
+    padding: 0 1em;
+    font-size: 1.2em;
+}
+
+.x-box {
+    font-weight: bolder;
+    z-index: 100000020;
+    font-size: 1em;
+    background-color: #fff;
+    border-radius: 35px;
+    border: 1px solid lightgray;
+    padding: 0 0.4em;
+    margin: -1em 0 0 auto;
+    top: -10px;
+    cursor: pointer;
+}
+
+.species-result {
+    display: flex;
+    flex-direction: row;
+    padding: 1em;
+    align-items: center;
+    cursor: pointer;
+}
