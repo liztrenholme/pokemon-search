@@ -100,7 +100,6 @@ class Main extends Component {
         let shapeSpecies = '';
         let growthRateSpecies = '';
         if (pokemon && pokemon.name) {
-        // const pokemonId = pokemon.id;
           const speciesData = await getAnyUrl(pokemon.species.url); // getPokemonSpeciesData(pokemon.species.url || pokemonId);
           isBaby = speciesData.is_baby;
           isMythical = speciesData.is_mythical;
@@ -338,7 +337,6 @@ class Main extends Component {
         shapeSpecies,
         growthRateSpecies
       } = this.state;
-      console.log(officialArt);
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
       const lastLetters = generation ? generation.split('-')[1] : '';
       const temp = generation?.split('-')[0];
@@ -501,42 +499,42 @@ class Main extends Component {
                     selectedLevel={4} />
                   : null} */}
               </div>
-              <div className='explore-box'>
-                {gen || shape || growthRate ? <div className='divider' /> : null}
-                {gen || shape || growthRate ? <strong><p className='varieties-header'>Explore</p></strong> : null}
-                {gen || shape || growthRate ? <div className='varieties-box'>
-                  {gen ?
-                    <Explore 
-                      header={gen} 
-                      regionSpecies={regionSpecies} 
-                      populateInput={this.populateInput}
-                      handleSearchCall={this.handleSearchCall} /> : null}
-                  {shape ?
-                    <Explore 
-                      header={shape} 
-                      regionSpecies={shapeSpecies} 
-                      populateInput={this.populateInput}
-                      handleSearchCall={this.handleSearchCall} /> : null}
-                  {growthRate ?
-                    <Explore 
-                      header={`${growthRate} growth rate`} 
-                      regionSpecies={growthRateSpecies}
-                      populateInput={this.populateInput}
-                      handleSearchCall={this.handleSearchCall} /> : null}
-                  {types && types.length ?
-                    types.map(type => 
-                      <Explore 
-                        key={type.name} 
-                        header={`${type.name} type`} 
-                        regionSpecies={type.data.pokemon.map(i => {return {name: i.pokemon.name, url: i.pokemon.url};}).filter(j => !j.name.includes('totem'))} 
-                        populateInput={this.populateInput}
-                        handleSearchCall={this.handleSearchCall} />
-                    ) : null
-                  }
-                </div>
-                  : null}
-              </div>
             </div>) : null}
+          {!isLoading && pokemon && (gen || shape || growthRate) ?
+            <div className='explore-box'>
+              {gen || shape || growthRate ? <strong><p className='varieties-header'>Explore</p></strong> : null}
+              {gen || shape || growthRate ? <div className='varieties-box'>
+                {gen ?
+                  <Explore 
+                    header={gen} 
+                    regionSpecies={regionSpecies} 
+                    populateInput={this.populateInput}
+                    handleSearchCall={this.handleSearchCall} /> : null}
+                {shape ?
+                  <Explore 
+                    header={shape} 
+                    regionSpecies={shapeSpecies} 
+                    populateInput={this.populateInput}
+                    handleSearchCall={this.handleSearchCall} /> : null}
+                {growthRate ?
+                  <Explore 
+                    header={`${growthRate} growth rate`} 
+                    regionSpecies={growthRateSpecies}
+                    populateInput={this.populateInput}
+                    handleSearchCall={this.handleSearchCall} /> : null}
+                {types && types.length ?
+                  types.map(type => 
+                    <Explore 
+                      key={type.name} 
+                      header={`${type.name} type`} 
+                      regionSpecies={type.data.pokemon.map(i => {return {name: i.pokemon.name, url: i.pokemon.url};}).filter(j => !j.name.includes('totem'))} 
+                      populateInput={this.populateInput}
+                      handleSearchCall={this.handleSearchCall} />
+                  ) : null
+                }
+              </div>
+                : null}
+            </div> : null}
         </div>
       );
     }
