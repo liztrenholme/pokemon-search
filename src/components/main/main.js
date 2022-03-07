@@ -13,6 +13,7 @@ import {
 import Pokeball from '../images/Pokeball.png';
 import Evolution from '../Evolution';
 import Explore from '../Explore';
+import OfficialArtModal from '../OfficialArtModal';
 import axios from 'axios';
 
 class Main extends Component {
@@ -125,7 +126,7 @@ class Main extends Component {
           const varieties = speciesData.varieties;
         
           if (varieties && varieties.length) {
-            varieties.forEach(form => !form.pokemon?.name.includes('starter') && !form.pokemon?.name.includes('world-cap') 
+            varieties.forEach(form => !form.pokemon?.name.includes('world-cap') 
               ? varietiesList.push({name: form.pokemon?.name, url: form.pokemon?.url}) : null);
           }
           let evolution = null;
@@ -219,6 +220,7 @@ class Main extends Component {
             imgBackFemale: pokemon.sprites.back_female,
             imgFrontShinyFemale: pokemon.sprites.front_shiny_female,
             imgBackShinyFemale: pokemon.sprites.back_shiny_female,
+            officialArt: pokemon.sprites.other['official-artwork']?.front_default,
             moves,
             types,
             evolutionChain: evolves,
@@ -258,6 +260,7 @@ class Main extends Component {
               imgBackShiny: '',
               imgFrontShinyFemale: '',
               imgBackShinyFemale: '',
+              officialArt: '',
               searchInput: '',
               moves: [],
               types: [],
@@ -278,7 +281,7 @@ class Main extends Component {
               pokedexId: '',
               regionSpecies: [],
               shapeSpecies: [],
-              growthRateSpecies: []
+              growthRateSpecies: [],
             });
           }
         }
@@ -310,6 +313,7 @@ class Main extends Component {
         imgBackFemale,
         imgFrontShinyFemale,
         imgBackShinyFemale,
+        officialArt,
         shinyMode,
         isLoading,
         types,
@@ -334,6 +338,7 @@ class Main extends Component {
         shapeSpecies,
         growthRateSpecies
       } = this.state;
+      console.log(officialArt);
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
       const lastLetters = generation ? generation.split('-')[1] : '';
       const temp = generation?.split('-')[0];
@@ -446,11 +451,11 @@ class Main extends Component {
               {shapeDisplayed ? <p>Shape: {shapeDisplayed}</p> : null}
               {genus ? <p>Genus: {genus}</p> : null}
               {pokedexId && pokedexId < 899 ? <p>Pokédex ID: {pokedexId}</p> : null}
+              {officialArt ? <OfficialArtModal officialArtImg={officialArt} pokemonName={pokemonName} /> : null}
               {description ? <div className='divider' /> : null}
               {description ? <p>{formatLev2}</p> : null}
               {varieties && varieties.length - 1 ? <strong><p className='varieties-header'>Varieties</p></strong> : null}
               {varieties && varieties.length - 1 ? <div className='varieties-box'>
-                
                 {varieties.map(variety => (
                   variety.name !== pokemon ?
                     <div key={variety.name} className='variety-btn' onClick={() => this.handleSearchCall(variety.name)}>{variety.name}</div> : null
