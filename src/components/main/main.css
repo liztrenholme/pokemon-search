@@ -4,6 +4,7 @@
     background-color:rgb(231, 246, 231, 0.8);
     padding: 1em;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    max-width: 20em;
 }
 
 h1 {
