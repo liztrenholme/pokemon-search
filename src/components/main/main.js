@@ -99,6 +99,7 @@ class Main extends Component {
         let regionSpecies = '';
         let shapeSpecies = '';
         let growthRateSpecies = '';
+        let habitatSpecies = '';
         if (pokemon && pokemon.name) {
           const speciesData = await getAnyUrl(pokemon.species.url); // getPokemonSpeciesData(pokemon.species.url || pokemonId);
           isBaby = speciesData.is_baby;
@@ -115,6 +116,10 @@ class Main extends Component {
           const growthRateSpeciesData = await getAnyUrl(speciesData?.growth_rate?.url);
           if (growthRateSpeciesData.pokemon_species) {
             growthRateSpecies = growthRateSpeciesData.pokemon_species;
+          }
+          const habitatSpeciesData = await getAnyUrl(speciesData?.habitat?.url);
+          if (habitatSpeciesData.pokemon_species) {
+            habitatSpecies = habitatSpeciesData.pokemon_species;
           }
           habitat = speciesData.habitat;
           growthRate = speciesData.growth_rate?.name;
@@ -240,7 +245,8 @@ class Main extends Component {
             pokedexId: speciesData.pokedex_numbers[0]?.entry_number,
             regionSpecies,
             shapeSpecies,
-            growthRateSpecies
+            growthRateSpecies,
+            habitatSpecies
           });
         } else if (pokemon && pokemon.includes('404')) {
           const foundAlternativeName = this.checkPokemonName(this.state.searchInput.toLowerCase().trim());
@@ -281,6 +287,7 @@ class Main extends Component {
               regionSpecies: [],
               shapeSpecies: [],
               growthRateSpecies: [],
+              habitatSpecies: []
             });
           }
         }
@@ -335,7 +342,8 @@ class Main extends Component {
         // allPokemon,
         regionSpecies,
         shapeSpecies,
-        growthRateSpecies
+        growthRateSpecies,
+        habitatSpecies
       } = this.state;
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
       const lastLetters = generation ? generation.split('-')[1] : '';
@@ -500,10 +508,10 @@ class Main extends Component {
                   : null} */}
               </div>
             </div>) : null}
-          {!isLoading && pokemon && (gen || shape || growthRate) ?
+          {!isLoading && pokemon && (gen || shape || growthRate || types || habitat) ?
             <div className='explore-box'>
-              {gen || shape || growthRate ? <strong><p className='varieties-header'>Explore</p></strong> : null}
-              {gen || shape || growthRate ? <div className='varieties-box'>
+              <strong><p className='varieties-header'>Explore</p></strong>
+              <div className='varieties-box'>
                 {gen ?
                   <Explore 
                     header={gen} 
@@ -530,10 +538,14 @@ class Main extends Component {
                       regionSpecies={type.data.pokemon.map(i => {return {name: i.pokemon.name, url: i.pokemon.url};}).filter(j => !j.name.includes('totem'))} 
                       populateInput={this.populateInput}
                       handleSearchCall={this.handleSearchCall} />
-                  ) : null
-                }
+                  ) : null}
+                {habitat ?
+                  <Explore 
+                    header={`${habitat.name} habitat`} 
+                    regionSpecies={habitatSpecies}
+                    populateInput={this.populateInput}
+                    handleSearchCall={this.handleSearchCall} /> : null}
               </div>
-                : null}
             </div> : null}
         </div>
       );
