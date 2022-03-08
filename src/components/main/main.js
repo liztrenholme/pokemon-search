@@ -5,9 +5,7 @@ import './main.css';
 import 'whatwg-fetch';
 import {
   getPokemonData,
-  // getPokemonSpeciesData,
   getRandomPokemon,
-  //  getPokemonForms
   getAnyUrl
 } from '../../modules';
 import Pokeball from '../images/Pokeball.png';

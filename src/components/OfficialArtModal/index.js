@@ -15,8 +15,6 @@ class OfficialArtModal extends Component {
         <div className='art-container'>
           <div className='variety-btn' onClick={this.handleDisplayArt}>Official Artwork</div>
           {this.state.displayed
-            ? <div className='x-box' onClick={this.handleDisplayArt}>x</div> : null}
-          {this.state.displayed
             ? <div className='art-modal'>
               <div className='fixed-header'>
                 <p className='header-title'>{pokemonName}</p>

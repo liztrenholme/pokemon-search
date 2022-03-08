@@ -20,8 +20,6 @@ class Explore extends Component {
         <div className='explore-container'>
           <div className='variety-btn' onClick={this.handleDisplayList}>Show all {header} species</div>
           {this.state.displayed
-            ? <div className='x-box' onClick={this.handleDisplayList}>x</div> : null}
-          {this.state.displayed
             ? <div className='explore-species-modal'>
               <div className='fixed-header'>
                 <p className='header-title'>{this.props.header} ({regionSpecies.length})</p>
