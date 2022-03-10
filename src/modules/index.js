@@ -71,3 +71,17 @@ export const getRandomPokemon = async () => {
     return data.data;
   }
 };
+
+export const getItemsData = async () => {
+  let data = {};
+  try {
+    data = await axios.get('https://pokeapi.co/api/v2/item/');
+    
+  } catch(e) {
+    console.log('error fetching', e);
+    return 'Error ' + e; 
+  }
+  if (data && Object.keys(data)) {
+    return data.data;
+  }
+};
