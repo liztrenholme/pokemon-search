@@ -6,12 +6,14 @@ import 'whatwg-fetch';
 import {
   getPokemonData,
   getRandomPokemon,
-  getAnyUrl
+  getAnyUrl,
+  getItemsData
 } from '../../modules';
 import Pokeball from '../images/Pokeball.png';
 import Evolution from '../Evolution';
 import Explore from '../Explore';
 import OfficialArtModal from '../OfficialArtModal';
+import Items from '../Items';
 import axios from 'axios';
 
 class Main extends Component {
@@ -80,6 +82,7 @@ class Main extends Component {
       if ((newPokemon && typeof newPokemon === 'string') || (newPokemon && typeof newPokemon === 'number') || this.state.searchInput) {
         this.setState({ isLoading: true });
         const pokemon = await getPokemonData((typeof newPokemon === 'string') || (typeof newPokemon === 'number') ? newPokemon : this.state.searchInput);
+        const allItems = await getItemsData();
         let evolves = [];
         let deName = '';
         let jaName = '';
@@ -244,7 +247,8 @@ class Main extends Component {
             regionSpecies,
             shapeSpecies,
             growthRateSpecies,
-            habitatSpecies
+            habitatSpecies,
+            allItems
           });
         } else if (pokemon && pokemon.includes('404')) {
           const foundAlternativeName = this.checkPokemonName(this.state.searchInput.toLowerCase().trim());
@@ -341,7 +345,8 @@ class Main extends Component {
         regionSpecies,
         shapeSpecies,
         growthRateSpecies,
-        habitatSpecies
+        habitatSpecies,
+        allItems
       } = this.state;
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
       const lastLetters = generation ? generation.split('-')[1] : '';
@@ -510,6 +515,7 @@ class Main extends Component {
             <div className='explore-box'>
               <strong><p className='varieties-header'>Explore</p></strong>
               <div className='varieties-box'>
+                <Items allItems={allItems} getAnyUrl={getAnyUrl} />
                 {gen ?
                   <Explore 
                     header={gen} 
