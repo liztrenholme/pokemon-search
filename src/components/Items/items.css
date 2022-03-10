@@ -11,7 +11,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     color: black;
-    max-height: 40em;
+    max-height: 90%;
 }
 
 .item {
@@ -48,6 +48,7 @@
 @media only screen and (max-width: 500px) {
     .items-modal {
         width: 90%;
+        max-height: 35em;
     }
 }
 
