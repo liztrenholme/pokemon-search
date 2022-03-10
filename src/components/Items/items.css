@@ -1,0 +1,113 @@
+.items-modal {
+    position: fixed;
+    z-index: 100000010;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 5px 5px 20px #222;
+    width: 50%;
+    max-height: 80%;
+    overflow: scroll;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
+    max-height: 40em;
+}
+
+.item {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+    border-top: solid black 1px;
+    padding: 0.5em;
+    cursor: pointer;
+}
+
+.nav-box {
+    display: flex;
+    flex-direction: row;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 0.5em;
+}
+
+.disabled {
+    color: lightslategray;
+}
+
+.nav-previous {
+    margin-right: auto;
+    cursor: pointer;
+}
+
+.nav-next {
+    margin-left: auto;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 500px) {
+    .items-modal {
+        width: 90%;
+    }
+}
+
+.fixed-div {
+    position: sticky; 
+    top: 0;
+    background-color: #fff;
+    width: 100%;
+}
+
+.fixed-items-header {
+    font-weight: bolder;
+    display: flex;
+    flex-direction: row;
+    font-size: 1em;
+    align-items: flex-end;
+    align-content: space-between;
+    text-align: right;  
+}
+
+.header-title {
+    padding: 0 1em;
+    font-size: 1.2em;
+}
+
+.x-box {
+    font-weight: bolder;
+    z-index: 100000020;
+    font-size: 1em;
+    background-color: #fff;
+    /* border-radius: 35px;
+    border: 1px solid lightgray; */
+    padding: 0.1 0.5em;
+    margin: -1em 0 0 auto;
+    top: -10px;
+    cursor: pointer;
+}
+
+.selected-item-header {
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.5em;
+    align-items: center;
+}
+
+.selected-item {
+    display: flex;
+    flex-direction: column;
+    position: sticky; 
+    top: 0;
+    background-color: white;
+    padding: 0.5em;
+    text-align: left;
+    height: fit-content;
+}
+
+.item-row {
+    white-space: normal;
+    border-top: solid 1px black;
+    padding: 0.25em;
+}
