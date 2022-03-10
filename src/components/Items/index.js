@@ -59,9 +59,9 @@ Category: {selectedItem.category.name}
                   {selectedItem.held_by_pokemon && selectedItem.held_by_pokemon.length ? <div className='item-row'>
 Held by Pokémon: {selectedItem.held_by_pokemon.map(j => <span key={j.pokemon.name}>{j.pokemon.name}  </span>)}
                   </div> : null}
-                  {selectedItem.baby_trigger_for ? <div className='item-row'>
+                  {/* {selectedItem.baby_trigger_for ? <div className='item-row'>
 Baby Trigger for: {selectedItem.baby_trigger_for}
-                  </div> : null}
+                  </div> : null} */}
                   <div className='item-row'>
 Description: {selectedItem.effect_entries.find(i => i.language.name === 'en').short_effect}
                   </div>
