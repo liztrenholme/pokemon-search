@@ -217,6 +217,11 @@ ul {
     align-items: baseline;
 }
 
+.held-item-box {
+    display: flex;
+    align-items: center;
+}
+
 .held-item {
     width: 50px;
     height: 50px;

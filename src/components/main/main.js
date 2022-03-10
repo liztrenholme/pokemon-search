@@ -50,7 +50,9 @@ class Main extends Component {
       pokedexId: '',
       regionSpecies: '',
       shapeSpecies: '',
-      growthRateSpecies: ''
+      growthRateSpecies: '',
+      allItems: {},
+      heldItems: []
     }
 
     async componentDidMount() {
@@ -101,7 +103,11 @@ class Main extends Component {
         let shapeSpecies = '';
         let growthRateSpecies = '';
         let habitatSpecies = '';
+        let heldItems = [];
         if (pokemon && pokemon.name) {
+          heldItems = pokemon.held_items.map(i => {
+            return ({name: i.item.name.split('-').join(' '), imgUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${i.item.name}.png`});
+          });
           const speciesData = await getAnyUrl(pokemon.species.url); // getPokemonSpeciesData(pokemon.species.url || pokemonId);
           isBaby = speciesData.is_baby;
           isMythical = speciesData.is_mythical;
@@ -248,7 +254,8 @@ class Main extends Component {
             shapeSpecies,
             growthRateSpecies,
             habitatSpecies,
-            allItems
+            allItems,
+            heldItems
           });
         } else if (pokemon && pokemon.includes('404')) {
           const foundAlternativeName = this.checkPokemonName(this.state.searchInput.toLowerCase().trim());
@@ -289,7 +296,8 @@ class Main extends Component {
               regionSpecies: [],
               shapeSpecies: [],
               growthRateSpecies: [],
-              habitatSpecies: []
+              habitatSpecies: [],
+              heldItems: []
             });
           }
         }
@@ -346,7 +354,8 @@ class Main extends Component {
         shapeSpecies,
         growthRateSpecies,
         habitatSpecies,
-        allItems
+        allItems,
+        heldItems
       } = this.state;
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
       const lastLetters = generation ? generation.split('-')[1] : '';
@@ -460,6 +469,7 @@ class Main extends Component {
               {shapeDisplayed ? <p>Shape: {shapeDisplayed}</p> : null}
               {genus ? <p>Genus: {genus}</p> : null}
               {pokedexId && pokedexId < 899 ? <p>Pokédex ID: {pokedexId}</p> : null}
+              {heldItems && heldItems.length ? <div><p>Held Items:</p> {heldItems.map(i => <div className='held-item-box' key={i.name}><img src={i.imgUrl} alt={i.name} />{i.name}</div>)}</div> : null}
               {officialArt ? <OfficialArtModal officialArtImg={officialArt} pokemonName={pokemonName} /> : null}
               {description ? <div className='divider' /> : null}
               {description ? <p>{formatLev2}</p> : null}
