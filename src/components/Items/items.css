@@ -45,9 +45,14 @@
     cursor: pointer;
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 700px) {
     .items-modal {
         width: 90%;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .items-modal {
         max-height: 35em;
     }
 }
@@ -111,4 +116,16 @@
     white-space: normal;
     border-top: solid 1px black;
     padding: 0.25em;
+    
+}
+
+.pokemon-holders {
+    display: flex;
+    align-items: center;
+    max-height: 10em;
+    overflow: scroll;
+}
+
+.held-by-img {
+    max-width: 60px;
 }

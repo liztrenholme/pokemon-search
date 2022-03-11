@@ -8,7 +8,9 @@ class IndividualItem extends Component {
     const {item} = this.props;
     return (
       <div className='item' onClick={() => this.props.handleSelectItem(item.url)}>
-        <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name.includes('tm') ? 'tm-normal' : item.name}.png`}
+        <img
+          style={{marginRight: '1em'}}
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name.includes('tm') ? 'tm-normal' : item.name}.png`}
           alt={item.name} />
         {item.name.split('-').join(' ')}
       </div>

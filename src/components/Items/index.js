@@ -6,8 +6,6 @@ import IndividualItem from './individualItem';
 
 class Items extends Component {
     state = {
-      displayed: false,
-      selectedItem: {},
       allItems: {}
     }
 
@@ -25,59 +23,62 @@ class Items extends Component {
       }
     }
 
-    handleSelectItem = async (itemUrl) => {
-      const itemData = await this.props.getAnyUrl(itemUrl);
-      if (itemData) {
-        this.setState({selectedItem: itemData});
-      }
-    }
-
-    handleDisplayList = () => this.state.displayed ? this.setState({displayed: false}) : this.setState({displayed: true})
     render() {
-      const {allItems, selectedItem} = this.state;
+      const {allItems} = this.state;
+      const {selectedItem, allPokemon} = this.props;
+      console.log(allPokemon);
       return (
         <div className='items-container'>
-          <div className='variety-btn' onClick={this.handleDisplayList}>Show all Items</div>
-          {this.state.displayed ? <div className='items-modal'>
+          <div className='variety-btn' onClick={this.props.handleDisplayList}>Show all Items</div>
+          {this.props.displayed ? <div className='items-modal'>
             <div className='fixed-div'>
               <div className='fixed-items-header'>
                 <p className='header-title'>Items</p>
-                <div className='x-box' onClick={this.handleDisplayList}>x</div>
+                <div className='x-box' onClick={this.props.handleDisplayList}>x</div>
               </div>
               {selectedItem && selectedItem.name ? (
                 <div className='selected-item'>
                   <div className='selected-item-header'>
-                    <img style={{width: '80px'}} src={selectedItem.sprites.default} alt={selectedItem.name} />
+                    <img style={{width: '60px', marginRight: '1em'}} src={selectedItem.sprites.default} alt={selectedItem.name} />
                     {selectedItem.name.split('-').join(' ')}
                   </div>
-                  <div className='item-row'>
+                  {selectedItem.attributes && selectedItem.attributes.length ? <div className='item-row'>
 Attributes: {selectedItem.attributes.map(i => <span key={i.name}>{i.name}   </span>)}
+                  </div> : null}
+                  <div className='item-row'>
+Cost: {selectedItem.cost}
                   </div>
                   <div className='item-row'>
 Category: {selectedItem.category.name}
                   </div>
-                  {selectedItem.held_by_pokemon && selectedItem.held_by_pokemon.length ? <div className='item-row'>
-Held by Pokémon: {selectedItem.held_by_pokemon.map(j => <span key={j.pokemon.name}>{j.pokemon.name}  </span>)}
+                  {selectedItem.held_by_pokemon && selectedItem.held_by_pokemon.length ? <div className='item-row pokemon-holders'>
+                    {/* Held by Pokémon: {selectedItem.held_by_pokemon.map(j => <span key={j.pokemon.name}>{j.pokemon.name}  </span>)} */}
+Held by Pokémon: {selectedItem.held_by_pokemon.map(j => <img 
+                      className='held-by-img' 
+                      key={j.pokemon.name} 
+                      alt={j.pokemon.name} 
+                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${j.pokemon.url.split('/')[j.pokemon.url.split('/').length - 2]}.png`}
+                      onClick={() => this.props.handleSearchCall(j.pokemon.name)} />)}
                   </div> : null}
                   {/* {selectedItem.baby_trigger_for ? <div className='item-row'>
 Baby Trigger for: {selectedItem.baby_trigger_for}
                   </div> : null} */}
-                  <div className='item-row'>
-Description: {selectedItem.effect_entries.find(i => i.language.name === 'en').short_effect}
-                  </div>
+                  {selectedItem.effect_entries && selectedItem.effect_entries.length ? <div className='item-row'>
+Description: {selectedItem.effect_entries.find(i => i.language.name === 'en')?.short_effect}
+                  </div> : null}
                 </div>) : null}
             </div>
             {allItems && allItems.results && allItems.results.length ? 
               allItems.results.map(i => 
                 <IndividualItem
-                  handleSelectItem={this.handleSelectItem}
+                  handleSelectItem={this.props.handleSelectItem}
                   key={Math.random()}
                   item={i} />) : null}
             <div className='nav-box'>
               <p onClick={allItems.previous ? () => this.handleFetchNav(allItems.previous) : null} 
                 className={`nav-previous ${allItems.previous ? 'active' : 'disabled'}`}>Previous</p>
-              <p onClick={allItems.next ? () => this.handleFetchNav(allItems.next) : null} 
-                className={`nav-next ${allItems.next ? 'active' : 'disabled'}`}>Next</p>
+              <p onClick={allItems.next ? allItems.next.includes('940&') ? 'disabled' : () => this.handleFetchNav(allItems.next) : null} 
+                className={`nav-next ${allItems.next ? allItems.next.includes('940&') ? 'disabled' : 'active' : 'disabled'}`}>Next</p>
             </div>
           </div> : null}
         </div>
@@ -88,7 +89,13 @@ Description: {selectedItem.effect_entries.find(i => i.language.name === 'en').sh
 Items.propTypes = {
   header: PropTypes.string,
   allItems: PropTypes.array,
-  getAnyUrl: PropTypes.func
+  getAnyUrl: PropTypes.func,
+  handleSelectItem: PropTypes.func,
+  selectedItem: PropTypes.object,
+  handleDisplayList: PropTypes.func,
+  displayed: PropTypes.bool,
+  allPokemon: PropTypes.array,
+  handleSearchCall: PropTypes.func
 };
 
 export default Items;

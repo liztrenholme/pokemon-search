@@ -52,7 +52,9 @@ class Main extends Component {
       shapeSpecies: '',
       growthRateSpecies: '',
       allItems: {},
-      heldItems: []
+      heldItems: [],
+      selectedItem: '',
+      displayed: false // for items modal
     }
 
     async componentDidMount() {
@@ -79,8 +81,19 @@ class Main extends Component {
     }
 
     populateInput = (input) => this.setState({searchInput: input})
+
+    // for items modal
+    handleDisplayList = () => this.state.displayed ? this.setState({displayed: false}) : this.setState({displayed: true})
+
+    handleSelectItem = async (itemUrl) => {
+      const itemData = await getAnyUrl(itemUrl);
+      if (itemData) {
+        this.setState({selectedItem: itemData, displayed: true});
+      }
+    }
     
     handleSearchCall = async (newPokemon) => {
+      this.setState({displayed: false});
       if ((newPokemon && typeof newPokemon === 'string') || (newPokemon && typeof newPokemon === 'number') || this.state.searchInput) {
         this.setState({ isLoading: true });
         const pokemon = await getPokemonData((typeof newPokemon === 'string') || (typeof newPokemon === 'number') ? newPokemon : this.state.searchInput);
@@ -106,7 +119,8 @@ class Main extends Component {
         let heldItems = [];
         if (pokemon && pokemon.name) {
           heldItems = pokemon.held_items.map(i => {
-            return ({name: i.item.name.split('-').join(' '), imgUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${i.item.name}.png`});
+            console.log(i);
+            return ({name: i.item.name.split('-').join(' '), imgUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${i.item.name}.png`, url: i.item.url});
           });
           const speciesData = await getAnyUrl(pokemon.species.url); // getPokemonSpeciesData(pokemon.species.url || pokemonId);
           isBaby = speciesData.is_baby;
@@ -297,7 +311,8 @@ class Main extends Component {
               shapeSpecies: [],
               growthRateSpecies: [],
               habitatSpecies: [],
-              heldItems: []
+              heldItems: [],
+              displayed: false // for items modal
             });
           }
         }
@@ -349,13 +364,15 @@ class Main extends Component {
         mainRegion,
         description,
         pokedexId,
-        // allPokemon,
+        allPokemon,
         regionSpecies,
         shapeSpecies,
         growthRateSpecies,
         habitatSpecies,
         allItems,
-        heldItems
+        heldItems,
+        selectedItem,
+        displayed
       } = this.state;
       const pokemonName = pokemon && pokemon.length ? pokemon[0].toUpperCase() + pokemon.slice(1, pokemon.length + 1).toLowerCase() : null;
       const lastLetters = generation ? generation.split('-')[1] : '';
@@ -469,7 +486,7 @@ class Main extends Component {
               {shapeDisplayed ? <p>Shape: {shapeDisplayed}</p> : null}
               {genus ? <p>Genus: {genus}</p> : null}
               {pokedexId && pokedexId < 899 ? <p>Pokédex ID: {pokedexId}</p> : null}
-              {heldItems && heldItems.length ? <div><p>Held Items:</p> {heldItems.map(i => <div className='held-item-box' key={i.name}><img src={i.imgUrl} alt={i.name} />{i.name}</div>)}</div> : null}
+              {heldItems && heldItems.length ? <div><p>Held Items:</p> {heldItems.map(i => <div className='held-item-box' key={i.name} onClick={() => this.handleSelectItem(i.url)}><img src={i.imgUrl} alt={i.name} />{i.name}</div>)}</div> : null}
               {officialArt ? <OfficialArtModal officialArtImg={officialArt} pokemonName={pokemonName} /> : null}
               {description ? <div className='divider' /> : null}
               {description ? <p>{formatLev2}</p> : null}
@@ -525,7 +542,15 @@ class Main extends Component {
             <div className='explore-box'>
               <strong><p className='varieties-header'>Explore</p></strong>
               <div className='varieties-box'>
-                <Items allItems={allItems} getAnyUrl={getAnyUrl} />
+                <Items 
+                  displayed={displayed}
+                  handleDisplayList={this.handleDisplayList}
+                  allItems={allItems} 
+                  allPokemon={allPokemon}
+                  getAnyUrl={getAnyUrl} 
+                  handleSelectItem={this.handleSelectItem} 
+                  selectedItem={selectedItem}
+                  handleSearchCall={this.handleSearchCall} />
                 {gen ?
                   <Explore 
                     header={gen} 
