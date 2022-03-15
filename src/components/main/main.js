@@ -169,8 +169,8 @@ class Main extends Component {
                 level: 2, 
                 name: i.species.name, 
                 imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`,
-                evolveItem: i.evolution_details[0].held_item?.name.split('-').join(' '),
-                evolveItemUrl: i.evolution_details[0].held_item?.url
+                evolveItem: i.evolution_details[0] ? i.evolution_details[0].held_item?.name.split('-').join(' ') : null,
+                evolveItemUrl: i.evolution_details[0] ? i.evolution_details[0].held_item?.url : null
               }
             ));
             // level 3
@@ -179,8 +179,8 @@ class Main extends Component {
                 level: 3, 
                 name: i.species.name, 
                 imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`,
-                evolveItem: i.evolution_details[0].held_item?.name,
-                evolveItemUrl: i.evolution_details[0].held_item?.url
+                evolveItem: i.evolution_details[0] ? i.evolution_details[0].held_item?.name : null,
+                evolveItemUrl: i.evolution_details[0] ? i.evolution_details[0].held_item?.url : null
               }
             ));
             evolution.data.chain.evolves_to[1]?.evolves_to.forEach(i => manyEvols.push(
@@ -188,8 +188,8 @@ class Main extends Component {
                 level: 3, 
                 name: i.species.name, 
                 imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i.species.url.split('/')[i.species.url.split('/').length - 2]}.png`,
-                evolveItem: i.evolution_details[0].held_item?.name.split('-').join(' '),
-                evolveItemUrl: i.evolution_details[0].held_item?.url
+                evolveItem: i.evolution_details[0] ? i.evolution_details[0].held_item?.name.split('-').join(' ') : null,
+                evolveItemUrl: i.evolution_details[0] ? i.evolution_details[0].held_item?.url : null
               }
             ));
             // level 1
