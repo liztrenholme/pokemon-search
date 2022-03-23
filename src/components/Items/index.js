@@ -25,8 +25,7 @@ class Items extends Component {
 
     render() {
       const {allItems} = this.state;
-      const {selectedItem, allPokemon} = this.props;
-      console.log(allPokemon);
+      const {selectedItem} = this.props;
       return (
         <div className='items-container'>
           <div className='variety-btn' onClick={this.props.handleDisplayList}>Show all Items</div>

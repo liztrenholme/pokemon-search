@@ -119,7 +119,6 @@ class Main extends Component {
         let heldItems = [];
         if (pokemon && pokemon.name) {
           heldItems = pokemon.held_items.map(i => {
-            console.log(i);
             return ({name: i.item.name.split('-').join(' '), imgUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${i.item.name}.png`, url: i.item.url});
           });
           const speciesData = await getAnyUrl(pokemon.species.url); // getPokemonSpeciesData(pokemon.species.url || pokemonId);
@@ -416,8 +415,47 @@ class Main extends Component {
                       {jaName ? <em>Japanese: {jaName}</em> : null}
                       {deName ? <em>German: {deName}</em> : null}
                     </div>
-                    {types.length ? <span><ul className='types-list'>
-                      <h3>Type(s):</h3> {types.map(type => <li key={type.name}>{type.name}</li>)}
+                    {types.length ? <span><ul className='types-list' 
+                      style={{textAlign: 'left', padding: '1em'}}>
+                      <h3>Type(s):</h3> {types.map(type => 
+                        <ul key={type.name} style={{marginTop: '0.5em'}}>
+                          <h3>• {type.name}</h3>
+                          {type.data.damage_relations.double_damage_from.length ?
+                            <li key='double-damage-from'>
+                              <strong>Double Damage From: </strong>
+                              {type.data.damage_relations.double_damage_from.map(i => <span key={i.name}>{i.name} </span>)}
+                            </li> : null}
+
+                          {type.data.damage_relations.double_damage_to.length ?
+                            <li key='double-damage-to'>
+                              <strong>Double Damage To: </strong>
+                              {type.data.damage_relations.double_damage_to.map(i => <span key={i.name}>{i.name} </span>)}
+                            </li> : null}
+
+                          {type.data.damage_relations.half_damage_from.length ?
+                            <li key='half-damage-from'>
+                              <strong>Half Damage From: </strong>
+                              {type.data.damage_relations.half_damage_from.map(i => <span key={i.name}>{i.name} </span>)}
+                            </li> : null}
+
+                          {type.data.damage_relations.half_damage_to.length ?
+                            <li key='half-damage-to'>
+                              <strong>Half Damage To: </strong>
+                              {type.data.damage_relations.half_damage_to.map(i => <span key={i.name}>{i.name} </span>)}
+                            </li> : null}
+
+                          {type.data.damage_relations.no_damage_from.length ?
+                            <li key='no-damage-from'>
+                              <strong>No Damage From: </strong>
+                              {type.data.damage_relations.no_damage_from.map(i => <span key={i.name}>{i.name} </span>)}
+                            </li> : null}
+
+                          {type.data.damage_relations.no_damage_to.length ?
+                            <li key='no-damage-to'>
+                              <strong>No Damage To: </strong>
+                              {type.data.damage_relations.no_damage_to.map(i => <span key={i.name}>{i.name} </span>)}
+                            </li> : null}
+                        </ul>)}
                     </ul></span> : null}
                   </div>
                   {imgFrontShiny || imgBackShiny ? (
