@@ -423,37 +423,37 @@ class Main extends Component {
                           {type.data.damage_relations.double_damage_from.length ?
                             <li key='double-damage-from'>
                               <strong>Double Damage From: </strong>
-                              {type.data.damage_relations.double_damage_from.map(i => <span key={i.name}>{i.name} </span>)}
+                              {type.data.damage_relations.double_damage_from.map(i => i.name).join(', ')}
                             </li> : null}
 
                           {type.data.damage_relations.double_damage_to.length ?
                             <li key='double-damage-to'>
                               <strong>Double Damage To: </strong>
-                              {type.data.damage_relations.double_damage_to.map(i => <span key={i.name}>{i.name} </span>)}
+                              {type.data.damage_relations.double_damage_to.map(i => i.name).join(', ')}
                             </li> : null}
 
                           {type.data.damage_relations.half_damage_from.length ?
                             <li key='half-damage-from'>
                               <strong>Half Damage From: </strong>
-                              {type.data.damage_relations.half_damage_from.map(i => <span key={i.name}>{i.name} </span>)}
+                              {type.data.damage_relations.half_damage_from.map(i => i.name).join(', ')}
                             </li> : null}
 
                           {type.data.damage_relations.half_damage_to.length ?
                             <li key='half-damage-to'>
                               <strong>Half Damage To: </strong>
-                              {type.data.damage_relations.half_damage_to.map(i => <span key={i.name}>{i.name} </span>)}
+                              {type.data.damage_relations.half_damage_to.map(i => i.name).join(', ')}
                             </li> : null}
 
                           {type.data.damage_relations.no_damage_from.length ?
                             <li key='no-damage-from'>
                               <strong>No Damage From: </strong>
-                              {type.data.damage_relations.no_damage_from.map(i => <span key={i.name}>{i.name} </span>)}
+                              {type.data.damage_relations.no_damage_from.map(i => i.name).join(', ')}
                             </li> : null}
 
                           {type.data.damage_relations.no_damage_to.length ?
                             <li key='no-damage-to'>
                               <strong>No Damage To: </strong>
-                              {type.data.damage_relations.no_damage_to.map(i => <span key={i.name}>{i.name} </span>)}
+                              {type.data.damage_relations.no_damage_to.map(i => i.name).join(', ')}
                             </li> : null}
                         </ul>)}
                     </ul></span> : null}
@@ -524,7 +524,10 @@ class Main extends Component {
               {shapeDisplayed ? <p>Shape: {shapeDisplayed}</p> : null}
               {genus ? <p>Genus: {genus}</p> : null}
               {pokedexId && pokedexId < 899 ? <p>Pokédex ID: {pokedexId}</p> : null}
-              {heldItems && heldItems.length ? <div><p>Held Items:</p> {heldItems.map(i => <div className='held-item-box' key={i.name} onClick={() => this.handleSelectItem(i.url)}><img src={i.imgUrl} alt={i.name} />{i.name}</div>)}</div> : null}
+              {heldItems && heldItems.length ? <div style={{marginTop: '0.5em'}}><strong>Held Items:</strong> <div  className='varieties-box'>{heldItems.map(i => 
+                <div className='held-item-box variety-btn' key={i.name} onClick={() => this.handleSelectItem(i.url)}>
+                  <img src={i.imgUrl} alt={i.name} />{i.name}
+                </div>)}</div></div> : null}
               {officialArt ? <OfficialArtModal officialArtImg={officialArt} pokemonName={pokemonName} /> : null}
               {description ? <div className='divider' /> : null}
               {description ? <p>{formatLev2}</p> : null}
