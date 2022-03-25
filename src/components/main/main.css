@@ -44,10 +44,11 @@ em {
     color: black;
     border: solid black 3px;
     border-radius: 15px;
-    padding: 1em;
+    padding: 0.7em;
     background-color: white;
     margin-left: 0.5em;
-    min-width: 5em;
+    min-width: 7em;
+    white-space: nowrap;
 }
 
 ul {

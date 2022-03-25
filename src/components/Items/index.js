@@ -3,6 +3,7 @@ import './items.css';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import IndividualItem from './individualItem';
+import UpArrows from '../images/up-arrows.png';
 
 class Items extends Component {
     state = {
@@ -65,6 +66,11 @@ Baby Trigger for: {selectedItem.baby_trigger_for}
                   {selectedItem.effect_entries && selectedItem.effect_entries.length ? <div className='item-row'>
 Description: {selectedItem.effect_entries.find(i => i.language.name === 'en')?.short_effect}
                   </div> : null}
+                  <img 
+                    className='up-arrows' 
+                    src={UpArrows} 
+                    alt='close' 
+                    onClick={() => this.props.handleSelectItem('')} />
                 </div>) : null}
             </div>
             {allItems && allItems.results && allItems.results.length ? 
