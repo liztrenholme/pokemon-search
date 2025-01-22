@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable no-console */
 import './items.css';
 import React, { Component } from 'react';
@@ -11,6 +12,37 @@ class Items extends Component {
     }
 
     componentDidMount() {
+      var dataFromDocument = location.hash.replace(/#/, "");
+      console.log('data from parent?', dataFromDocument, window.location.origin);
+      document.hasStorageAccess().then(
+        () => {
+          console.log("cookie access granted");
+          window.parent.postMessage({type: 'log', message: 'access granted?'}, '*');
+        },
+        () => {
+          console.log("cookie access denied");
+          window.parent.postMessage({type: 'log', message: 'access denied'}, '*');
+        },
+      );
+      
+      document.requestStorageAccess({ sessionStorage: true, localStorage: true }).then(
+        (handle) => {
+          let item1 = '';
+          let item2 = '';
+          console.log("sessionStorage access granted", handle);
+          console.log(handle.sessionsStorage.getItem('foo'), 'from parent');
+          // handle.localStorage.setItem("foo", "bar");
+          item1 = handle.sessionStorage.getItem("item1");
+          item2 = handle.localStorage.getItem('item2');
+          console.log('items...', item2, item1);
+          window.parent.postMessage({type: 'log', message: 'item2 is...' + ' ' + item2}, '*');
+          window.parent.postMessage({type: 'log', message: 'item1 is...' + ' ' + item1}, '*');
+          window.parent.postMessage({type: 'log', message: 'item3 from parent is ' + handle.localStorage.getItem('item3')}, '*');
+        },
+        () => {
+          console.log("localStorage access denied");
+        },
+      );
       const {allItems} = this.props;
       if (allItems && allItems.results && allItems.results.length) {
         this.setState({allItems});
@@ -23,8 +55,8 @@ class Items extends Component {
         this.setState({allItems: newSet});
       }
     }
-
     render() {
+      console.log('hello from items component!!');
       const {allItems} = this.state;
       const {selectedItem} = this.props;
       return (

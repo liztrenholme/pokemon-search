@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 class IndividualItem extends Component {
   render() {
     const {item} = this.props;
+    window.parent.postMessage({ type: 'log', message: 'Message from iframe:' + JSON.stringify(item) }, '*'); 
+
     return (
       <div className='item' onClick={() => this.props.handleSelectItem(item.url)}>
         <img
