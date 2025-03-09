@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import './App.css';
-import Main from './components/main/main.js';
+import Main from './components/main/main.jsx';
 import json from '../package.json';
 
 function App() {
