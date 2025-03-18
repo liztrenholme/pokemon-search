@@ -54,6 +54,7 @@ Category: {selectedItem.category.name}
                   {selectedItem.held_by_pokemon && selectedItem.held_by_pokemon.length ? <div className='item-row pokemon-holders'>
                     {/* Held by Pokémon: {selectedItem.held_by_pokemon.map(j => <span key={j.pokemon.name}>{j.pokemon.name}  </span>)} */}
 Held by Pokémon: {selectedItem.held_by_pokemon.map(j => <img 
+                      data-testid='held-by-img-test'
                       className='held-by-img' 
                       key={j.pokemon.name} 
                       alt={j.pokemon.name} 

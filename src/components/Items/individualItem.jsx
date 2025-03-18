@@ -7,7 +7,7 @@ class IndividualItem extends Component {
   render() {
     const {item} = this.props;
     return (
-      <div className='item' onClick={() => this.props.handleSelectItem(item.url)}>
+      <div data-testid='item-test' className='item' onClick={() => this.props.handleSelectItem(item.url)}>
         <img
           style={{marginRight: '1em'}}
           src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name.includes('tm') ? 'tm-normal' : item.name}.png`}
