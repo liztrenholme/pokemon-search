@@ -1,5 +1,5 @@
 import Items from '../index';
-import {describe, test, beforeEach, vi, expect} from 'vitest';
+import {describe, test, vi, expect} from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
