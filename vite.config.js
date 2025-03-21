@@ -34,7 +34,9 @@ export default defineConfig({
         '**/dist/**',
         'scripts/**',
         'src/index.jsx',
-        'src/serviceWorker.js'
+        'src/serviceWorker.js',
+        'src/reportWebVitals.js',
+        'src/setupTests.js'
       ]
     }
   }
