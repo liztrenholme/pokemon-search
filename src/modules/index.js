@@ -8,7 +8,7 @@ export const getPokemonData = async (pokemonName) => {
     
   } catch(e) {
     console.log('error fetching', e);
-    return 'Error ' + e; 
+    throw 'Error ' + e; 
   }
   if (data && Object.keys(data)) {
     return data.data;
@@ -22,7 +22,7 @@ export const getAnyUrl = async (url) => {
     
   } catch(e) {
     console.log('error fetching', e);
-    return 'Error ' + e; 
+    throw 'Error ' + e; 
   }
   if (data && Object.keys(data)) {
     return data.data;
@@ -36,7 +36,7 @@ export const getEvolutionData = async (pokemonId) => {
     
   } catch(e) {
     console.log('error fetching', e);
-    return 'Error ' + e; 
+    throw 'Error ' + e; 
   }
   if (data && Object.keys(data)) {
     return data.data;
@@ -50,7 +50,7 @@ export const getPokemonSpeciesData = async (pokemonId) => {
         
   } catch(e) {
     console.log('error fetching', e);
-    return 'Error ' + e; 
+    throw 'Error ' + e; 
   }
   if (data && Object.keys(data)) {
     return data.data;
@@ -65,7 +65,7 @@ export const getRandomPokemon = async () => {
         
   } catch(e) {
     console.log('error fetching', e);
-    return 'Error ' + e; 
+    throw 'Error ' + e; 
   }
   if (data && Object.keys(data)) {
     return data.data;
@@ -79,7 +79,7 @@ export const getItemsData = async () => {
     
   } catch(e) {
     console.log('error fetching', e);
-    return 'Error ' + e; 
+    throw 'Error ' + e; 
   }
   if (data && Object.keys(data)) {
     return data.data;
