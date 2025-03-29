@@ -82,8 +82,6 @@ describe('Items', async () => {
       handleSearchCall={() => {}}
       handleSelectItem={() => {}} />);
 
-    // const imgToClick = await screen.getByTestId('held-by-img-test');
-    // fireEvent.click(imgToClick);
     fireEvent.click(screen.getByText('Previous'));
     const itemName = await screen.getByText('ultraball');
     expect(itemName).toBeInTheDocument();
@@ -115,7 +113,7 @@ describe('Items', async () => {
         },
         attributes: [],
         held_by_pokemon: [],
-        effect_entries: []
+        effect_entries: [{language: {name: 'en'}, short_effect: 'blurb...'}],
       }}
       handleDisplayList={() => {}}
       displayed={true}
@@ -123,11 +121,48 @@ describe('Items', async () => {
       handleSearchCall={() => {}}
       handleSelectItem={() => {}} />);
 
-    // const imgToClick = await screen.getByTestId('held-by-img-test');
-    // fireEvent.click(imgToClick);
     fireEvent.click(screen.getByText('Previous'));
     const itemName = await screen.getByText('ultraball');
     expect(itemName).toBeInTheDocument();
+  });
+
+  test('selectedItem is missing name', async () => {
+    vi.mock('../IndividualItem', () => ({ 
+      default: (props) => {
+        mockIndividualItem(props);
+        return <div 
+          onClick={props.handleSelectItem}>
+          {props.item.name}
+        </div>;
+      }, 
+    }));
+    render(<Items 
+      header='Show All Items'
+      allItems={{results: ['pokeball', 'ultraball'], previous: false, next: 'next'}}
+      getAnyUrl={() => {
+        return {results: ['elixir', 'potion']};
+      }}
+      selectedItem={{
+        name: '', 
+        cost: 800, 
+        sprites: {
+          default: null}, 
+        category: {
+          name: 'balls'
+        },
+        attributes: [],
+        held_by_pokemon: [],
+        effect_entries: [{language: {name: 'en'}, short_effect: 'blurb...'}],
+      }}
+      handleDisplayList={() => {}}
+      displayed={true}
+      allPokemon={[]}
+      handleSearchCall={() => {}}
+      handleSelectItem={() => {}} />);
+
+    fireEvent.click(screen.getByText('Previous'));
+    const itemName = await screen.queryByText('ultraball');
+    expect(itemName).not.toBeInTheDocument();
   });
 
   test('displayed is false', async () => {
@@ -141,7 +176,7 @@ describe('Items', async () => {
       }, 
     }));
     render(<Items 
-      header='Show All Items'
+      header='Header'
       allItems={{results: ['pokeball', 'ultraball'], previous: false, next: true}}
       getAnyUrl={() => {
         return {results: ['elixir', 'potion']};
@@ -155,8 +190,8 @@ describe('Items', async () => {
 
     // const imgToClick = await screen.getByTestId('held-by-img-test');
     // fireEvent.click(imgToClick);
-    // fireEvent.click(screen.getByText('Previous'));
-    // const itemName = await screen.getByText('ultraball');
-    // expect(itemName).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Show all Items'));
+    const description = await screen.queryByText('description');
+    expect(description).not.toBeInTheDocument();
   });
 });
